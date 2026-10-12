@@ -19,7 +19,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 ## ✨ Key Features
 
 - 🎟️ **Prompto sidebar** — your recipes, snippets and cast, synced from Chrome and searchable inside ComfyUI.
-- ⚡ **Load into workflow** — one click writes a recipe's prompt and negative into the open workflow, plus its seed, steps, CFG, sampler, scheduler, model and size where they match.
+- ⚡ **Load into workflow** — one click writes a recipe's prompt and negative into the open workflow, plus its seed, steps, CFG, sampler, scheduler, model, size and LoRAs where they match.
 - ➕ **Add to the selected node** — append a snippet, a character's tags or an outfit to whichever text node you've selected.
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
 - 📥 **Auto-capture** — an optional setting sends every image from a Save Image node to the inbox, with the prompt that made it.
@@ -70,6 +70,7 @@ The frontend extension installs `window.PromptoBridge` in the ComfyUI page:
 | Method | What it does |
 |---|---|
 | `info()` | Returns the bridge version, so Prompto knows it's installed. |
+| `loras()` | Lists the installed LoRAs, for Prompto's LoRA autocomplete. |
 | `apply(payload)` | Writes a recipe into the workflow, or text into the selected node. |
 | `syncLibrary(snapshot)` | Saves the library snapshot that the sidebar shows. |
 | `takeCaptures()` / `ackCaptures(ids)` | Hands queued captures to Prompto, then removes the ones it saved. |
@@ -83,7 +84,8 @@ Prompto calls these through the open ComfyUI tab. Without this extension it fall
 - The prompt node is found by following the sampler's **positive** and **negative** inputs back to the node holding the text, through ControlNet and guidance nodes. Flux-style workflows are found through their **Guider** node.
 - Seed, steps, CFG, sampler and scheduler go to the first sampler, so a hires-fix pass keeps its own steps.
 - Dropdown settings (sampler, scheduler, model) are only changed when the value is one of that dropdown's options. A model is matched by file name even if it sits in a subfolder.
-- Size goes to the first node with both **width** and **height**. LoRAs aren't applied yet.
+- Size goes to the first node with both **width** and **height**.
+- LoRAs fill the existing LoRA loader nodes in order, matched by file name, with the weight on both model and CLIP. Loaders the recipe doesn't use, or whose LoRA isn't installed, are bypassed. No nodes are added; you're told when more loaders are needed.
 </details>
 
 <details>
@@ -118,7 +120,6 @@ Tests, local installs and releasing are described in **[docs/DEVELOPMENT.md](doc
 
 ## 🗺️ Roadmap
 
-- Apply LoRAs when loading a recipe.
 - Prompto nodes, such as a character node that picks an outfit when you queue.
 
 ## 🤝 Contributing

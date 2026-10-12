@@ -5,7 +5,7 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 // ---------- Graph ----------
 const textWidget = (n) =>
@@ -62,7 +62,7 @@ export function apply(payload) {
   if (!pos) for (const n of nodes) if (/Guider/.test(n.type || "")) pos = pos || upstreamText(n, "conditioning");
   if (!pos) return { ok: false, error: "Couldn't find the prompt node in this workflow." };
 
-  const applied = ["prompt"];
+  const applied = ["prompt"], warnings = [];
   setWidgetValue(textWidget(pos), payload.positive);
   if (neg && neg !== pos && payload.negative != null) {
     setWidgetValue(textWidget(neg), payload.negative);
@@ -101,8 +101,50 @@ export function apply(payload) {
       applied.push("size");
     }
   }
+  applyLoras(nodes, s.loras, applied, warnings);
   dirty();
-  return { ok: true, applied };
+  return { ok: true, applied, warnings };
+}
+
+// LoRAs fill the workflow's existing LoRA loader nodes in order; no nodes are
+// added. Loaders the recipe doesn't use, or whose LoRA isn't installed, are bypassed.
+const loraBase = (v) => String(v).split(/[\\/]/).pop().replace(/\.(safetensors|ckpt|pt|bin)$/i, "").toLowerCase();
+
+function applyLoras(nodes, list, applied, warnings) {
+  const loras = (list || []).filter((l) => l && l.name);
+  if (!loras.length) return;
+  const loaders = nodes.filter((n) => /LoraLoader/i.test(n.type || "") && (n.widgets || []).some((w) => w.name === "lora_name")).sort((a, b) => a.id - b.id);
+  let set = 0;
+  loras.forEach((l, i) => {
+    const n = loaders[i];
+    if (!n) return;
+    const w = n.widgets.find((x) => x.name === "lora_name");
+    const opts = Array.isArray(w.options?.values) ? w.options.values : null;
+    const val = opts ? opts.find((o) => loraBase(o) === loraBase(l.name)) : l.name;
+    if (val == null) { n.mode = 4; warnings.push(`${loraBase(l.name)} isn't installed, so its loader is bypassed`); return; }
+    setWidgetValue(w, val);
+    for (const k of ["strength_model", "strength_clip"]) {
+      const sw = n.widgets.find((x) => x.name === k);
+      if (sw) setWidgetValue(sw, Number(l.w));
+    }
+    if (n.mode === 4) n.mode = 0;
+    set++;
+  });
+  const short = loras.length - loaders.length;
+  if (short > 0) warnings.push(`${short} more LoRA loader node${short > 1 ? "s" : ""} needed`);
+  const spare = loaders.slice(loras.length).filter((n) => n.mode !== 4);
+  for (const n of spare) n.mode = 4;
+  if (spare.length) warnings.push(`bypassed ${spare.length} unused LoRA loader${spare.length > 1 ? "s" : ""}`);
+  if (set) applied.push(set === 1 ? "1 LoRA" : set + " LoRAs");
+}
+
+// Installed LoRAs, from LoraLoader's lora_name options (both old and new formats).
+export async function listLoras() {
+  const res = await api.fetchApi("/object_info/LoraLoader");
+  if (!res.ok) return [];
+  const spec = (await res.json())?.LoraLoader?.input?.required?.lora_name;
+  if (!spec) return [];
+  return Array.isArray(spec[0]) ? spec[0] : spec[1]?.options || [];
 }
 
 // ---------- Images ----------
@@ -187,6 +229,7 @@ export function install() {
   window.PromptoBridge = {
     version: VERSION,
     info: () => ({ version: VERSION }),
+    loras: listLoras,
     apply,
     async syncLibrary(snapshot) {
       const out = await post("/prompto/library", snapshot);

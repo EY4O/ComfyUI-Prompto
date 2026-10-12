@@ -13,7 +13,7 @@ from server import PromptServer
 
 from .prompto_store import MAX_CAPTURE_BYTES, MAX_LIBRARY_BYTES, Store
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 try:
     import folder_paths
