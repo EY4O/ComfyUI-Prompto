@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-prompto"
 description = "ComfyUI side of the Prompto Chrome extension: Prompto Recipe, Character, Snippet and Wildcards nodes, a Prompto library sidebar, load recipes into the workflow, add snippets at the cursor, Save to Prompto on nodes and images, and auto-capture of saved images."
-version = "0.4.1"
+version = "0.4.2"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"

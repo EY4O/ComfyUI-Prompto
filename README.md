@@ -29,6 +29,14 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 - 🕒 **Waits for you** — captures queue on the ComfyUI server (up to 100) until Prompto collects them, so nothing is lost while Chrome is closed.
 - 🔌 **A stable bridge** — Prompto talks to ComfyUI through this extension instead of ComfyUI's internals, so ComfyUI updates are less likely to break it.
 
+## 🎬 From booru tag to image
+
+![A character goes from a Safebooru post into Prompto's cast, then into ComfyUI's Prompto Character node and out as an image](docs/images/walkthrough.gif)
+
+In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast** saves it. Prompto syncs the cast here, so the character is in the **Prompto Character** node's list (press **R** if the node was already open), with its outfits, ready to queue.
+
+<sub>Recorded with Prompto 0.16 and ComfyUI-Prompto 0.4 on an Illustrious checkpoint. The post's artwork is blurred.</sub>
+
 ## 🧩 Example workflow
 
 <p align="center"><img src="docs/images/workflow.png" alt="An Illustrious workflow built from Prompto nodes"><br><sub>Both images made with an Illustrious checkpoint and Prompto's sample library.</sub></p>
