@@ -40,11 +40,11 @@ python -m pytest tests
 
 | Suite | Covers |
 |---|---|
-| `test_store` | Library snapshot round trip and validation; the capture queue: add, validate, acknowledge, and the 100-item cap |
+| `test_store` | Library snapshot round trip and validation; the capture queue: add, validate, acknowledge, and the 100-item cap; reading the version from `pyproject.toml` |
 | `test_logic` | Node logic: dropdown labels, wildcard rolls, outfits (fixed, none, random), character formats, recipe values and defaults |
 
 ## Releasing
 
-1. Bump `version` in `pyproject.toml` and `VERSION` in `prompto_routes.py` and `web/bridge.js`.
+1. Bump `version` in `pyproject.toml`. It's the only place the version is written: the server reads it for `/prompto/status`, and the bridge asks the server.
 2. Commit and push to `main`.
-3. `.github/workflows/publish.yml` publishes to the [Comfy Registry](https://registry.comfy.org) whenever `pyproject.toml` changes on `main` (or run it by hand from the Actions tab). It needs a `REGISTRY_ACCESS_TOKEN` repository secret: a publisher API key for `looneth` from registry.comfy.org. Without it the run only leaves a notice.
+3. `.github/workflows/publish.yml` publishes to the [Comfy Registry](https://registry.comfy.org) whenever `pyproject.toml` changes on `main` (or run it by hand from the Actions tab). A push that only changes docs (`README.md`, `docs/`, `LICENSE`, `.github/`, or just the version line) is skipped; `.github/scripts/needs-publish.sh` decides. It needs a `REGISTRY_ACCESS_TOKEN` repository secret: a publisher API key for `looneth` from registry.comfy.org. Without it the run only leaves a notice.

@@ -24,8 +24,19 @@ jobs:
       - name: Check out code
         if: ${{ env.HAS_TOKEN == 'true' }}
         uses: actions/checkout@v4
-      - name: Publish Custom Node
+        with:
+          fetch-depth: 0
+      # A version bump that only touches docs (README, docs/, LICENSE, workflows)
+      # isn't published. Running the workflow by hand always publishes.
+      - name: Skip docs-only changes
+        id: changes
         if: ${{ env.HAS_TOKEN == 'true' }}
+        env:
+          BEFORE: ${{ github.event.before }}
+          EVENT: ${{ github.event_name }}
+        run: bash .github/scripts/needs-publish.sh "$EVENT" "$BEFORE" "$GITHUB_SHA"
+      - name: Publish Custom Node
+        if: ${{ env.HAS_TOKEN == 'true' && steps.changes.outputs.publish == 'true' }}
         uses: Comfy-Org/publish-node-action@v1
         with:
           personal_access_token: ${{ secrets.REGISTRY_ACCESS_TOKEN }}

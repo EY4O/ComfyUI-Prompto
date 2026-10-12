@@ -11,9 +11,9 @@ import os
 from aiohttp import web
 from server import PromptServer
 
-from .prompto_store import MAX_CAPTURE_BYTES, MAX_LIBRARY_BYTES, Store
+from .prompto_store import MAX_CAPTURE_BYTES, MAX_LIBRARY_BYTES, Store, read_version
 
-VERSION = "0.4.2"
+VERSION = read_version(os.path.join(os.path.dirname(os.path.abspath(__file__)), "pyproject.toml"))
 
 try:
     import folder_paths

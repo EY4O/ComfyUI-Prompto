@@ -2,7 +2,7 @@
 // items, and optional auto-capture of finished images.
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
-import { install, captureImage, captureText, VERSION } from "./bridge.js";
+import { install, captureImage, captureText, version } from "./bridge.js";
 import { renderSidebar } from "./sidebar.js";
 
 const AUTO_CAPTURE = "Prompto.AutoCapture";
@@ -65,7 +65,7 @@ app.registerExtension({
       for (const img of images) captureImage(img, "ComfyUI · auto").catch((e) => console.warn("[Prompto] capture failed", e));
     });
 
-    console.info(`[Prompto] bridge ${VERSION} ready`);
+    version.then((v) => console.info(`[Prompto] bridge ${v} ready`));
   },
 
   async beforeRegisterNodeDef(nodeType) {

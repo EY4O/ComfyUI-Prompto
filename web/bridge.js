@@ -5,7 +5,11 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-export const VERSION = "0.4.2";
+// The version is written only in pyproject.toml; the server reads it.
+export const version = api.fetchApi("/prompto/status")
+  .then((r) => (r.ok ? r.json() : {}))
+  .then((s) => s.version || "unknown")
+  .catch(() => "unknown");
 
 // ---------- Graph ----------
 // Any text box counts: CLIP Text Encode's "text", SDXL/Flux encoders' split
@@ -279,8 +283,7 @@ export const onLibrary = (fn) => (listeners.add(fn), () => listeners.delete(fn))
 
 export function install() {
   window.PromptoBridge = {
-    version: VERSION,
-    info: () => ({ version: VERSION }),
+    info: async () => ({ version: await version }),
     loras: listLoras,
     // Presses Queue once, for Prompto's "Queue variants".
     async queue() {

@@ -6,6 +6,7 @@ Kept free of ComfyUI imports so it can be tested on its own.
 
 import json
 import os
+import re
 import threading
 import time
 import uuid
@@ -15,6 +16,16 @@ MAX_LIBRARY_BYTES = 25 * 1024 * 1024
 MAX_CAPTURE_BYTES = 4 * 1024 * 1024
 CAPTURE_KINDS = {"generation", "text"}
 LIBRARY_LISTS = ("recipes", "snippets", "cast")
+
+
+def read_version(path):
+    """The [project] version from pyproject.toml, the one place it's written."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            m = re.search(r'^version\s*=\s*"([^"]+)"', f.read(), re.M)
+        return m.group(1) if m else "unknown"
+    except OSError:
+        return "unknown"
 
 
 class Store:

@@ -5,7 +5,7 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from prompto_store import MAX_CAPTURES, Store  # noqa: E402
+from prompto_store import MAX_CAPTURES, Store, read_version  # noqa: E402
 
 
 @pytest.fixture
@@ -49,3 +49,12 @@ def test_capture_queue_is_bounded(store):
     items = store.list_captures()
     assert len(items) == MAX_CAPTURES
     assert items[0]["text"] == "tag 5"
+
+
+def test_version_comes_from_pyproject(tmp_path):
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    assert read_version(os.path.join(root, "pyproject.toml"))[0].isdigit()
+    p = tmp_path / "pyproject.toml"
+    p.write_text('[project]\nname = "x"\nversion = "1.2.3"\n', encoding="utf-8")
+    assert read_version(str(p)) == "1.2.3"
+    assert read_version(str(tmp_path / "missing.toml")) == "unknown"
