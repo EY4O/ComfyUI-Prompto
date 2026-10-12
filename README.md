@@ -21,6 +21,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 ## ✨ Key Features
 
 - 🎟️ **Prompto sidebar** — your recipes, snippets and cast, synced from Chrome and searchable inside ComfyUI.
+- 🧩 **Prompto nodes** — **Prompto Recipe**, **Character**, **Snippet** and **Wildcards** put your library straight into a workflow, rolled fresh on every queue.
 - ⚡ **Load into workflow** — one click writes a recipe's prompt and negative into the open workflow, plus its seed, steps, CFG, sampler, scheduler, model, size and LoRAs where they match.
 - ➕ **Add to a prompt box** — click into any prompt box and add a snippet, a character's tags or an outfit right at the cursor, or append to the text nodes you've selected.
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
@@ -63,6 +64,21 @@ Custom nodes go in the package's own folder, for example `C:/StabilityMatrix/Dat
 ---
 
 ## 📖 How It Works
+
+<details>
+<summary><b>🧩 Prompto nodes</b></summary>
+
+Find them under **Prompto** in the node menu. They read the library Prompto last synced, so after adding things in Chrome press **R** in ComfyUI (or refresh the page) to see them in the dropdowns.
+
+| Node | Outputs |
+|---|---|
+| **Prompto Recipe** | `positive`, `negative`, `seed`, `steps`, `cfg`, `width`, `height`, `sampler`, `scheduler`: wire them into a KSampler and latent. `roll` picks the wildcards. |
+| **Prompto Character** | `text`: a cast member's tags, prose, or both, plus an outfit (a fixed one, **(none)** or **(random)**, chosen by `seed`), and `outfit`, the one used |
+| **Prompto Snippet** | `text`: a snippet's tags or prose |
+| **Prompto Wildcards** | `text`: any text with `{a\|b}` choices and `__snippet__` names rolled by `seed` |
+
+Wildcards follow Prompto's rules: `__name__` is one tag from the snippet of that name, or one snippet from that category. Put `seed` or `roll` on **randomize** for a new roll every queue. If a recipe or cast member was renamed or deleted in Prompto, the node says so when it runs instead of failing validation.
+</details>
 
 <details>
 <summary><b>🔌 The bridge</b></summary>

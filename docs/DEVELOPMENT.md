@@ -6,6 +6,8 @@ The repository root is the custom node package: ComfyUI imports `__init__.py` an
 __init__.py        registers the routes and the web directory (no nodes yet)
 prompto_routes.py  /prompto HTTP routes, on ComfyUI's PromptServer
 prompto_store.py   JSON storage for the library snapshot and capture queue (no ComfyUI imports)
+prompto_nodes.py   the Prompto Recipe, Character, Snippet and Wildcards nodes
+prompto_logic.py   text logic behind the nodes: labels, wildcards, outfits (no ComfyUI imports)
 web/prompto.js     frontend extension: bridge install, sidebar tab, node menus, auto-capture
 web/bridge.js      window.PromptoBridge, graph editing, image capture
 web/sidebar.js     the Prompto sidebar tab
@@ -39,6 +41,7 @@ python -m pytest tests
 | Suite | Covers |
 |---|---|
 | `test_store` | Library snapshot round trip and validation; the capture queue: add, validate, acknowledge, and the 100-item cap |
+| `test_logic` | Node logic: dropdown labels, wildcard rolls, outfits (fixed, none, random), character formats, recipe values and defaults |
 
 ## Releasing
 
