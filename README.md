@@ -71,6 +71,7 @@ The frontend extension installs `window.PromptoBridge` in the ComfyUI page:
 |---|---|
 | `info()` | Returns the bridge version, so Prompto knows it's installed. |
 | `loras()` | Lists the installed LoRAs, for Prompto's LoRA autocomplete. |
+| `queue()` | Presses Queue once, for Prompto's **Queue variants** (several wildcard rolls on one seed). |
 | `apply(payload)` | Writes a recipe into the workflow, or text into the selected node. |
 | `syncLibrary(snapshot)` | Saves the library snapshot that the sidebar shows. |
 | `takeCaptures()` / `ackCaptures(ids)` | Hands queued captures to Prompto, then removes the ones it saved. |

@@ -5,7 +5,7 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-export const VERSION = "0.2.0";
+export const VERSION = "0.3.0";
 
 // ---------- Graph ----------
 const textWidget = (n) =>
@@ -230,6 +230,11 @@ export function install() {
     version: VERSION,
     info: () => ({ version: VERSION }),
     loras: listLoras,
+    // Presses Queue once, for Prompto's "Queue variants".
+    async queue() {
+      await app.queuePrompt(0, 1);
+      return { ok: true };
+    },
     apply,
     async syncLibrary(snapshot) {
       const out = await post("/prompto/library", snapshot);
