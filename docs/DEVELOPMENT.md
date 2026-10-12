@@ -11,7 +11,7 @@ web/bridge.js      window.PromptoBridge, graph editing, image capture
 web/sidebar.js     the Prompto sidebar tab
 web/prompto.css    sidebar styles (prefixed pm-)
 tests/             pytest suites
-docs/              this file
+docs/              this file, docs/images/icon.png (drawn by tools/make-icons.py in the Prompto repo)
 ```
 
 ComfyUI imports every `.js` file in `web/`, so helper modules only export functions. `prompto.js` is the only one that registers anything.

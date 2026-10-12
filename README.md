@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/images/icon.png" width="112" alt="ComfyUI-Prompto"></p>
+
 <h1 align="center">ComfyUI-Prompto</h1>
 
 <p align="center"><b>Your Prompto prompt library inside ComfyUI, one click from the workflow.</b></p>
