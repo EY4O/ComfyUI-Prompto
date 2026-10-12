@@ -29,6 +29,17 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 - 🕒 **Waits for you** — captures queue on the ComfyUI server (up to 100) until Prompto collects them, so nothing is lost while Chrome is closed.
 - 🔌 **A stable bridge** — Prompto talks to ComfyUI through this extension instead of ComfyUI's internals, so ComfyUI updates are less likely to break it.
 
+## 🧩 Example workflow
+
+<p align="center"><img src="docs/images/workflow.png" alt="An Illustrious workflow built from Prompto nodes"><br><sub>Both images made with an Illustrious checkpoint and Prompto's sample library.</sub></p>
+
+**Prompto - Illustrious** ships in [`example_workflows/`](example_workflows/) and shows the nodes two ways:
+
+- **A recipe straight to an image** — **Prompto Recipe** drives everything: prompt, negative, seed, steps, CFG, sampler, scheduler and size.
+- **Composing a prompt** — **Prompto Wildcards** rolls the scene, **Prompto Character** adds a cast member in an outfit, and **Prompto Snippet** adds the lighting, joined with ComfyUI's **Concatenate Text**. It reuses the recipe's negative and sampler settings.
+
+Open it from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own checkpoint.
+
 ---
 
 ## 📦 Installation
@@ -145,10 +156,6 @@ Any text box counts: CLIP Text Encode, SDXL and Flux encoders (both of their pro
 ## 🧪 Development
 
 Tests, local installs and releasing are described in **[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)**.
-
-## 🗺️ Roadmap
-
-- Prompto nodes, such as a character node that picks an outfit when you queue.
 
 ## 🤝 Contributing
 

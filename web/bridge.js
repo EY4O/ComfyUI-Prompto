@@ -5,7 +5,7 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-export const VERSION = "0.4.0";
+export const VERSION = "0.4.1";
 
 // ---------- Graph ----------
 // Any text box counts: CLIP Text Encode's "text", SDXL/Flux encoders' split
