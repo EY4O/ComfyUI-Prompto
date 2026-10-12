@@ -1,0 +1,65 @@
+/* Prompto sidebar. Uses ComfyUI's own colour variables so it follows the
+   active theme, with the ticket details (perforation, tear line, holo stripe)
+   from the Chrome extension. Every class is prefixed pm- to stay out of the way. */
+.prompto-side {
+  --pm-holo: linear-gradient(115deg, #b76e79 0%, #e0435a 16%, #f4a7c0 30%, #9b7fd1 45%, #7cc3dd 57%, #f7dccf 69%, #d39a8d 82%, #b76e79 100%);
+  --pm-rose: #b76e79;
+  --pm-fg: var(--fg-color, #ddd);
+  --pm-muted: var(--descrip-text, #999);
+  --pm-line: var(--border-color, #444);
+  --pm-card: var(--comfy-input-bg, #222);
+  height: 100%;
+  overflow-y: auto;
+  color: var(--pm-fg);
+}
+.pm-wrap { padding: 12px 12px 24px; display: grid; gap: 10px; }
+.pm-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pm-brand { display: flex; align-items: center; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; text-transform: uppercase; line-height: 1; }
+.pm-o { width: 0.62em; height: 0.62em; margin-left: 0.04em; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff1f1 0%, #ffb3b3 20%, #f26d6d 58%, #c23b4a 100%); }
+.pm-link { background: none; border: 0; border-bottom: 1px solid var(--pm-line); color: var(--pm-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; padding: 0 0 2px; }
+.pm-link:hover { color: var(--pm-fg); border-color: var(--pm-fg); }
+
+.pm-tabs { display: flex; border-bottom: 1px solid var(--pm-line); }
+.pm-tabs button { flex: 1; background: none; border: 0; color: var(--pm-muted); padding: 6px 2px 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; cursor: pointer; position: relative; }
+.pm-tabs button small { font-weight: 400; opacity: 0.7; }
+.pm-tabs button[aria-selected="true"] { color: var(--pm-fg); }
+.pm-tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: -1px; height: 3px; border-radius: 3px; background: var(--pm-holo); }
+
+.pm-search { width: 100%; box-sizing: border-box; padding: 6px 10px; border-radius: 6px; border: 1px solid var(--pm-line); background: var(--pm-card); color: var(--pm-fg); font: inherit; font-size: 12px; }
+.pm-list { display: grid; gap: 12px; }
+
+.pm-ticket {
+  position: relative; padding: 14px 12px 10px; border-radius: 10px; background: var(--pm-card);
+  border: 1px solid var(--pm-line); overflow: hidden;
+}
+.pm-ticket::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--pm-holo); }
+.pm-thumb { display: block; width: calc(100% + 24px); margin: -14px -12px 10px; max-height: 140px; object-fit: cover; }
+.pm-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.pm-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 3px 8px; border-radius: 999px 0; background: var(--pm-fg); color: var(--comfy-menu-bg, #111); white-space: nowrap; }
+.pm-num { font-size: 11px; color: var(--pm-muted); text-transform: uppercase; }
+.pm-num b { color: var(--pm-fg); }
+.pm-title { margin: 8px 0 4px; font-size: 18px; line-height: 1; font-weight: 800; text-transform: uppercase; letter-spacing: -0.3px; }
+.pm-text { margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 11px; line-height: 1.45; color: var(--pm-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.pm-tear { margin: 10px -12px 8px; border-top: 2px dashed var(--pm-line); position: relative; }
+.pm-tear::before, .pm-tear::after { content: ""; position: absolute; top: -8px; width: 14px; height: 14px; border-radius: 50%; background: var(--comfy-menu-bg, #171717); }
+.pm-tear::before { left: -7px; }
+.pm-tear::after { right: -7px; }
+
+.pm-row { border-top: 1px solid var(--pm-line); padding-top: 10px; display: grid; gap: 6px; }
+.pm-row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.pm-name { font-size: 13px; font-weight: 700; text-transform: uppercase; }
+.pm-cat { font-size: 10px; text-transform: uppercase; color: var(--pm-muted); }
+.pm-prose { margin: 0; font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--pm-muted); line-height: 1.45; }
+.pm-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.pm-chip { font-family: ui-monospace, Consolas, monospace; font-size: 10.5px; padding: 3px 7px; border-radius: 50px; border: 1px solid var(--pm-line); }
+
+.pm-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.pm-btn { background: none; border: 1px solid var(--pm-line); color: var(--pm-fg); border-radius: 50px; padding: 4px 10px; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer; }
+.pm-btn:hover { border-color: var(--pm-rose); }
+.pm-primary { background: var(--pm-fg); color: var(--comfy-menu-bg, #111); border-color: var(--pm-fg); }
+.pm-primary:hover { background: var(--pm-rose); border-color: var(--pm-rose); color: #fff; }
+
+.pm-empty { color: var(--pm-muted); font-size: 12px; margin: 8px 0; }
+.pm-big { border: 1.5px dashed var(--pm-line); border-radius: 10px; padding: 14px; }
+.pm-big b { display: block; color: var(--pm-fg); font-size: 15px; text-transform: uppercase; margin-bottom: 6px; }
+.pm-big p { margin: 0; line-height: 1.45; }

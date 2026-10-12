@@ -1,0 +1,14 @@
+[project]
+name = "comfyui-prompto"
+description = "ComfyUI side of the Prompto Chrome extension: a library sidebar, Save to Prompto, and auto-capture of saved images."
+version = "0.1.0"
+license = { file = "LICENSE" }
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/EY4O/ComfyUI-Prompto"
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "Prompto"
+Icon = ""
