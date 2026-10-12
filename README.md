@@ -124,6 +124,8 @@ Prompto calls these through the open ComfyUI tab. Without this extension it fall
 - Dropdown settings (sampler, scheduler, model) are only changed when the value is one of that dropdown's options. A model is matched by file name even if it sits in a subfolder.
 - Size goes to the first node with both **width** and **height**.
 - LoRAs fill the existing LoRA loader nodes in order, matched by file name, with the weight on both model and CLIP. Loaders the recipe doesn't use, or whose LoRA isn't installed, are bypassed. No nodes are added; you're told when more loaders are needed.
+- Models are matched by file name, with or without folder and extension (Civitai names models without them).
+- **Missing models**: when the recipe's model or LoRAs aren't installed and [Model Librarian](https://github.com/EY4O/comfyui-model-librarian) is, a notice offers **Get them with Model Librarian**. The recipe is handed over in the shared [`recipe/1` format](https://github.com/EY4O/comfyui-model-librarian/blob/main/docs/RECIPE_FORMAT.md) with the hashes and Civitai version ids Prompto captured, so Model Librarian downloads exactly those files into the right folders, then can fill the workflow (adding loaders when it needs more).
 </details>
 
 <details>

@@ -10,6 +10,7 @@ prompto_nodes.py   the Prompto Recipe, Character, Snippet and Wildcards nodes
 prompto_logic.py   text logic behind the nodes: labels, wildcards, outfits (no ComfyUI imports)
 web/prompto.js     frontend extension: bridge install, sidebar tab, node menus, auto-capture
 web/bridge.js      window.PromptoBridge, graph editing, image capture
+web/missing.js     missing models after a recipe loads; hands the recipe to Model Librarian (recipe/1)
 web/sidebar.js     the Prompto sidebar tab
 web/prompto.css    sidebar styles (prefixed pm-)
 tests/             pytest suites
@@ -42,6 +43,8 @@ python -m pytest tests
 |---|---|
 | `test_store` | Library snapshot round trip and validation; the capture queue: add, validate, acknowledge, and the 100-item cap; reading the version from `pyproject.toml` |
 | `test_logic` | Node logic: dropdown labels, wildcard rolls, outfits (fixed, none, random), character formats, recipe values and defaults |
+
+`web/missing.js` has its own Node test (Node 18+, no ComfyUI): `node --test tests/test_missing.mjs`. It covers the recipe/1 conversion, missing-model detection and the Model Librarian notice.
 
 ## Releasing
 

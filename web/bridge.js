@@ -4,6 +4,7 @@
 // ComfyUI internals.
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
+import { offerDownloads } from "./missing.js";
 
 // The version is written only in pyproject.toml; the server reads it.
 export const version = api.fetchApi("/prompto/status")
@@ -136,7 +137,9 @@ export function apply(payload) {
       if (!w) continue;
       const opts = Array.isArray(w.options?.values) ? w.options.values : null;
       const base = (s) => String(s).split(/[\\/]/).pop();
-      const val = opts ? opts.find((o) => o === v) ?? opts.find((o) => base(o) === base(v)) : v;
+      // Civitai names models without folder or extension, so the file stem matches too
+      const stem = (s) => base(s).replace(/\.(safetensors|ckpt|pt|pth|bin|gguf|sft)$/i, "").toLowerCase();
+      const val = opts ? opts.find((o) => o === v) ?? opts.find((o) => base(o) === base(v)) ?? opts.find((o) => stem(o) === stem(v)) : v;
       if (val == null) continue;
       setWidgetValue(w, val);
       applied.push(label);
@@ -159,6 +162,8 @@ export function apply(payload) {
   }
   applyLoras(nodes, s.loras, applied, warnings);
   dirty();
+  // Missing models: Model Librarian, when installed, can download them (shown as a notice in ComfyUI).
+  offerDownloads(api, payload).catch((e) => console.warn("[Prompto] missing-model check:", e));
   return { ok: true, applied, warnings };
 }
 
