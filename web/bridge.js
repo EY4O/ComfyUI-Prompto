@@ -5,13 +5,52 @@
 import { app } from "../../scripts/app.js";
 import { api } from "../../scripts/api.js";
 
-export const VERSION = "0.3.0";
+export const VERSION = "0.3.1";
 
 // ---------- Graph ----------
-const textWidget = (n) =>
-  (n.widgets || []).find((w) => ["text", "prompt", "text_g", "string"].includes(w.name) && typeof w.value === "string");
+// Any text box counts: CLIP Text Encode's "text", SDXL/Flux encoders' split
+// boxes, string primitives, wildcard nodes, and any other multiline widget.
+const PROMPT_NAMES = ["text", "prompt", "text_g", "text_l", "clip_l", "t5xxl"];
+const TEXT_NAMES = [...PROMPT_NAMES, "positive", "wildcard_text", "string", "value", "text_positive"];
+const isTextWidget = (w) => typeof w.value === "string" && (TEXT_NAMES.includes(w.name) || w.type === "customtext" || !!(w.options && w.options.multiline));
+const textWidgets = (n) => (n.widgets || []).filter(isTextWidget);
+const textWidget = (n) => textWidgets(n)[0];
+
+// Writes a prompt into every prompt box of an encoder (SDXL has text_g and
+// text_l, Flux has clip_l and t5xxl), or its first text box otherwise.
+function setPrompt(node, v) {
+  const boxes = textWidgets(node).filter((w) => PROMPT_NAMES.includes(w.name));
+  for (const w of boxes.length ? boxes : [textWidget(node)]) setWidgetValue(w, v);
+}
+
+// Adds text at the cursor, with commas where the neighbouring text needs them.
+export function insertText(old, text, start = old.length, end = start) {
+  const before = old.slice(0, start), after = old.slice(end);
+  const left = before.trim() && !/[,(\n]\s*$/.test(before) ? before.replace(/\s*$/, "") + ", " : before;
+  const right = after.trim() && !/^\s*[,)\n]/.test(after) ? ", " + after.replace(/^\s*/, "") : after;
+  return { value: left + text + right, caret: (left + text).length };
+}
+
+// The prompt box you last clicked into. Clicking the canvas clears it, so
+// selecting nodes afterwards takes over again.
+let lastBox = null;
+// Clicking or typing in a box counts too, in case the focus event doesn't arrive.
+const remember = (e) => { if (e.target && e.target.tagName === "TEXTAREA") lastBox = e.target; };
+for (const type of ["focusin", "input", "keyup"]) document.addEventListener(type, remember, true);
+document.addEventListener("pointerdown", (e) => {
+  if (e.target && e.target.tagName === "TEXTAREA") lastBox = e.target;
+  else if (e.target && e.target.tagName === "CANVAS") lastBox = null;
+}, true);
+
+function widgetFor(el) {
+  for (const n of app.graph?._nodes || app.graph?.nodes || []) {
+    for (const w of n.widgets || []) if (w.element === el || w.inputEl === el || (w.element && w.element.contains && w.element.contains(el))) return { node: n, widget: w };
+  }
+  return null;
+}
 
 function setWidgetValue(w, v) {
+  if (!w) return;
   w.value = v;
   if (w.callback) w.callback(v);
 }
@@ -40,18 +79,31 @@ export function selectedTextNodes() {
   return Object.values(app.canvas?.selected_nodes || {}).filter(textWidget);
 }
 
+// Where "add to node" goes: the prompt box you were typing in, else the selected nodes.
+function targets() {
+  const el = lastBox && lastBox.isConnected ? lastBox : document.activeElement && document.activeElement.tagName === "TEXTAREA" ? document.activeElement : null;
+  const hit = el && widgetFor(el);
+  if (hit && isTextWidget(hit.widget)) return [{ ...hit, el }];
+  return selectedTextNodes().map((node) => ({ node, widget: textWidget(node), el: null }));
+}
+
 export function apply(payload) {
   const nodes = app.graph?._nodes || app.graph?.nodes || [];
 
   if (payload.mode === "selected") {
-    const sel = selectedTextNodes();
-    if (!sel.length) return { ok: false, error: "Select a text node in ComfyUI first." };
-    for (const n of sel) {
-      const w = textWidget(n);
-      setWidgetValue(w, payload.append && w.value.trim() ? w.value.replace(/[,\s]*$/, "") + ", " + payload.text : payload.text);
+    const list = targets();
+    if (!list.length) return { ok: false, error: "Click into a prompt box, or select a text node, in ComfyUI first." };
+    for (const { widget, el } of list) {
+      if (!payload.append) { setWidgetValue(widget, payload.text); continue; }
+      // In the box you were typing in, the text goes at the cursor; otherwise at the end.
+      const atCursor = el && typeof el.selectionStart === "number";
+      const { value, caret } = insertText(widget.value, payload.text, atCursor ? el.selectionStart : widget.value.length, atCursor ? el.selectionEnd : widget.value.length);
+      setWidgetValue(widget, value);
+      if (el) { el.value = value; try { el.setSelectionRange(caret, caret); } catch {} }
     }
     dirty();
-    return { ok: true, applied: [sel.length === 1 ? "1 node" : sel.length + " nodes"] };
+    const where = list[0].el ? `${list[0].node.title || list[0].node.type}` : list.length === 1 ? "1 node" : list.length + " nodes";
+    return { ok: true, applied: [where] };
   }
 
   let pos = null, neg = null;
@@ -63,9 +115,9 @@ export function apply(payload) {
   if (!pos) return { ok: false, error: "Couldn't find the prompt node in this workflow." };
 
   const applied = ["prompt"], warnings = [];
-  setWidgetValue(textWidget(pos), payload.positive);
+  setPrompt(pos, payload.positive);
   if (neg && neg !== pos && payload.negative != null) {
-    setWidgetValue(textWidget(neg), payload.negative);
+    setPrompt(neg, payload.negative);
     applied.push("negative");
   }
 

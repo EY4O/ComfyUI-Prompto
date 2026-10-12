@@ -20,7 +20,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 
 - 🎟️ **Prompto sidebar** — your recipes, snippets and cast, synced from Chrome and searchable inside ComfyUI.
 - ⚡ **Load into workflow** — one click writes a recipe's prompt and negative into the open workflow, plus its seed, steps, CFG, sampler, scheduler, model, size and LoRAs where they match.
-- ➕ **Add to the selected node** — append a snippet, a character's tags or an outfit to whichever text node you've selected.
+- ➕ **Add to a prompt box** — click into any prompt box and add a snippet, a character's tags or an outfit right at the cursor, or append to the text nodes you've selected.
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
 - 📥 **Auto-capture** — an optional setting sends every image from a Save Image node to the inbox, with the prompt that made it.
 - 🕒 **Waits for you** — captures queue on the ComfyUI server (up to 100) until Prompto collects them, so nothing is lost while Chrome is closed.
@@ -87,6 +87,15 @@ Prompto calls these through the open ComfyUI tab. Without this extension it fall
 - Dropdown settings (sampler, scheduler, model) are only changed when the value is one of that dropdown's options. A model is matched by file name even if it sits in a subfolder.
 - Size goes to the first node with both **width** and **height**.
 - LoRAs fill the existing LoRA loader nodes in order, matched by file name, with the weight on both model and CLIP. Loaders the recipe doesn't use, or whose LoRA isn't installed, are bypassed. No nodes are added; you're told when more loaders are needed.
+</details>
+
+<details>
+<summary><b>➕ Where "add to node" goes</b></summary>
+
+1. The prompt box you last clicked or typed in: the text goes in at the cursor, with commas added where needed, and the cursor moves past it so several snippets go in in order. Clicking the canvas forgets the box.
+2. Otherwise, every selected node with a text box: the text is appended.
+
+Any text box counts: CLIP Text Encode, SDXL and Flux encoders (both of their prompt boxes), string primitives, wildcard nodes, and other multiline text widgets. **Load into workflow** writes the prompt into every prompt box of an encoder, so Flux's `clip_l` and `t5xxl` both get it.
 </details>
 
 <details>
