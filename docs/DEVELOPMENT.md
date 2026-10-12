@@ -44,4 +44,4 @@ python -m pytest tests
 
 1. Bump `version` in `pyproject.toml` and `VERSION` in `prompto_routes.py` and `web/bridge.js`.
 2. Commit and push to `main`.
-3. Publish to the Comfy Registry with `comfy node publish`. One-time setup: fill in `PublisherId` in `pyproject.toml` and create a registry API key.
+3. `.github/workflows/publish.yml` publishes to the [Comfy Registry](https://registry.comfy.org) whenever `pyproject.toml` changes on `main` (or run it by hand from the Actions tab). It needs a `REGISTRY_ACCESS_TOKEN` repository secret: a publisher API key for `looneth` from registry.comfy.org. Without it the run only leaves a notice.

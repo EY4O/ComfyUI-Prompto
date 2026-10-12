@@ -1,14 +1,18 @@
 [project]
 name = "comfyui-prompto"
-description = "ComfyUI side of the Prompto Chrome extension: a library sidebar, Save to Prompto, and auto-capture of saved images."
-version = "0.3.2"
-license = { file = "LICENSE" }
+description = "ComfyUI side of the Prompto Chrome extension: a Prompto library sidebar, load recipes into the workflow, add snippets at the cursor, Save to Prompto on nodes and images, and auto-capture of saved images."
+version = "0.3.3"
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10"
 dependencies = []
 
 [project.urls]
 Repository = "https://github.com/EY4O/ComfyUI-Prompto"
+"Bug Tracker" = "https://github.com/EY4O/ComfyUI-Prompto/issues"
+#  Used by Comfy Registry https://registry.comfy.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "looneth"
 DisplayName = "Prompto"
 Icon = "https://raw.githubusercontent.com/EY4O/ComfyUI-Prompto/main/docs/images/icon.png"
