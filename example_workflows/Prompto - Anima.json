@@ -1,8 +1,8 @@
 {
   "id": "78b69dcb-9289-5ea2-b8c3-ecd515c024db",
   "revision": 0,
-  "last_node_id": 30,
-  "last_link_id": 42,
+  "last_node_id": 33,
+  "last_link_id": 47,
   "nodes": [
     {
       "id": 1,
@@ -620,6 +620,40 @@
     },
     {
       "id": 10,
+      "type": "Fast Groups Bypasser (rgthree)",
+      "pos": [
+        740,
+        650
+      ],
+      "size": [
+        320,
+        170
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "OPT_CONNECTION",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "properties": {
+        "matchColors": "",
+        "matchTitle": "~",
+        "showNav": true,
+        "showAllGraphs": true,
+        "sort": "position",
+        "customSortAlphabet": "",
+        "toggleRestriction": "default"
+      },
+      "color": "#233",
+      "bgcolor": "#355"
+    },
+    {
+      "id": 11,
       "type": "CLIPTextEncode",
       "pos": [
         1100,
@@ -630,7 +664,7 @@
         90
       ],
       "flags": {},
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -677,7 +711,7 @@
       "bgcolor": "#353"
     },
     {
-      "id": 11,
+      "id": 12,
       "type": "CLIPTextEncode",
       "pos": [
         1100,
@@ -688,7 +722,7 @@
         140
       ],
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
@@ -735,7 +769,7 @@
       "bgcolor": "#533"
     },
     {
-      "id": 12,
+      "id": 13,
       "type": "KSampler",
       "pos": [
         1460,
@@ -746,7 +780,7 @@
         270
       ],
       "flags": {},
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -864,7 +898,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 14,
       "type": "VAEDecode",
       "pos": [
         1460,
@@ -875,7 +909,7 @@
         50
       ],
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -899,7 +933,9 @@
           "links": [
             14,
             15,
-            35
+            35,
+            38,
+            46
           ]
         }
       ],
@@ -911,7 +947,7 @@
       "widgets_values": []
     },
     {
-      "id": 14,
+      "id": 15,
       "type": "PreviewImage",
       "pos": [
         1460,
@@ -922,7 +958,7 @@
         400
       ],
       "flags": {},
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -949,7 +985,7 @@
       "widgets_values": []
     },
     {
-      "id": 15,
+      "id": 16,
       "type": "ImageScaleBy",
       "pos": [
         1840,
@@ -960,7 +996,7 @@
         90
       ],
       "flags": {},
-      "order": 14,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -1014,7 +1050,7 @@
       }
     },
     {
-      "id": 16,
+      "id": 17,
       "type": "VAEEncode",
       "pos": [
         1840,
@@ -1025,7 +1061,7 @@
         50
       ],
       "flags": {},
-      "order": 15,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -1059,7 +1095,7 @@
       "widgets_values": []
     },
     {
-      "id": 17,
+      "id": 18,
       "type": "KSampler",
       "pos": [
         1840,
@@ -1070,7 +1106,7 @@
         270
       ],
       "flags": {},
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -1188,7 +1224,7 @@
       }
     },
     {
-      "id": 18,
+      "id": 19,
       "type": "VAEDecode",
       "pos": [
         1840,
@@ -1199,7 +1235,7 @@
         50
       ],
       "flags": {},
-      "order": 17,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -1234,7 +1270,7 @@
       "widgets_values": []
     },
     {
-      "id": 19,
+      "id": 20,
       "type": "PreviewImage",
       "pos": [
         1840,
@@ -1245,7 +1281,7 @@
         400
       ],
       "flags": {},
-      "order": 18,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -1272,7 +1308,7 @@
       "widgets_values": []
     },
     {
-      "id": 20,
+      "id": 21,
       "type": "ImageScaleBy",
       "pos": [
         2180,
@@ -1283,7 +1319,7 @@
         90
       ],
       "flags": {},
-      "order": 19,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
@@ -1337,7 +1373,7 @@
       }
     },
     {
-      "id": 21,
+      "id": 22,
       "type": "VAEEncode",
       "pos": [
         2180,
@@ -1348,7 +1384,7 @@
         50
       ],
       "flags": {},
-      "order": 20,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
@@ -1382,7 +1418,7 @@
       "widgets_values": []
     },
     {
-      "id": 22,
+      "id": 23,
       "type": "KSampler",
       "pos": [
         2180,
@@ -1393,7 +1429,7 @@
         270
       ],
       "flags": {},
-      "order": 21,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -1511,7 +1547,7 @@
       }
     },
     {
-      "id": 23,
+      "id": 24,
       "type": "VAEDecode",
       "pos": [
         2180,
@@ -1522,7 +1558,7 @@
         50
       ],
       "flags": {},
-      "order": 22,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -1546,8 +1582,8 @@
           "links": [
             34,
             36,
-            38,
-            41
+            37,
+            45
           ]
         }
       ],
@@ -1559,7 +1595,7 @@
       "widgets_values": []
     },
     {
-      "id": 24,
+      "id": 25,
       "type": "PreviewImage",
       "pos": [
         2180,
@@ -1570,7 +1606,7 @@
         400
       ],
       "flags": {},
-      "order": 23,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
@@ -1597,7 +1633,7 @@
       "widgets_values": []
     },
     {
-      "id": 25,
+      "id": 26,
       "type": "Image Comparer (rgthree)",
       "pos": [
         2520,
@@ -1608,7 +1644,7 @@
         1100
       ],
       "flags": {},
-      "order": 24,
+      "order": 25,
       "mode": 0,
       "inputs": [
         {
@@ -1650,18 +1686,117 @@
       ]
     },
     {
-      "id": 26,
-      "type": "UpscaleModelLoader",
+      "id": 27,
+      "type": "Any Switch (rgthree)",
       "pos": [
         3420,
         80
+      ],
+      "size": [
+        260,
+        130
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_01",
+          "type": "IMAGE",
+          "link": 37,
+          "dir": 3
+        },
+        {
+          "name": "any_02",
+          "type": "IMAGE",
+          "link": 38,
+          "dir": 3
+        },
+        {
+          "name": "any_03",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "dir": 4,
+          "label": "IMAGE",
+          "name": "*",
+          "shape": 3,
+          "type": "IMAGE",
+          "links": [
+            40,
+            42
+          ]
+        }
+      ],
+      "title": "Image to upscale",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.2608210019"
+      }
+    },
+    {
+      "id": 28,
+      "type": "ImageUpscaleWithModel",
+      "pos": [
+        3420,
+        140
+      ],
+      "size": [
+        320,
+        50
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "UPSCALE_MODEL",
+          "link": 39
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 40
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            41
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.39.0",
+        "Node name for S&R": "ImageUpscaleWithModel"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 29,
+      "type": "UpscaleModelLoader",
+      "pos": [
+        3420,
+        240
       ],
       "size": [
         320,
         60
       ],
       "flags": {},
-      "order": 25,
+      "order": 27,
       "mode": 0,
       "inputs": [
         {
@@ -1680,7 +1815,7 @@
           "name": "UPSCALE_MODEL",
           "type": "UPSCALE_MODEL",
           "links": [
-            37
+            39
           ]
         }
       ],
@@ -1697,70 +1832,25 @@
       }
     },
     {
-      "id": 27,
-      "type": "ImageUpscaleWithModel",
-      "pos": [
-        3420,
-        190
-      ],
-      "size": [
-        320,
-        50
-      ],
-      "flags": {},
-      "order": 26,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "upscale_model",
-          "name": "upscale_model",
-          "type": "UPSCALE_MODEL",
-          "link": 37
-        },
-        {
-          "localized_name": "image",
-          "name": "image",
-          "type": "IMAGE",
-          "link": 38
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "IMAGE",
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            39
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.39.0",
-        "Node name for S&R": "ImageUpscaleWithModel"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 28,
+      "id": 30,
       "type": "ImageScaleBy",
       "pos": [
         3420,
-        290
+        350
       ],
       "size": [
         320,
         90
       ],
       "flags": {},
-      "order": 27,
+      "order": 29,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "image",
           "name": "image",
           "type": "IMAGE",
-          "link": 39
+          "link": 41
         },
         {
           "localized_name": "upscale_method",
@@ -1787,8 +1877,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            40,
-            42
+            43,
+            44
           ]
         }
       ],
@@ -1808,25 +1898,137 @@
       }
     },
     {
-      "id": 29,
-      "type": "SaveImage",
+      "id": 31,
+      "type": "Image Comparer (rgthree)",
       "pos": [
         3780,
         80
+      ],
+      "size": [
+        820,
+        1100
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image_a",
+          "name": "image_a",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 42,
+          "dir": 3
+        },
+        {
+          "localized_name": "image_b",
+          "name": "image_b",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 43,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null,
+          "dir": 4,
+          "shape": 3
+        }
+      ],
+      "title": "COMPARES RESAMPLED TO UPSCALED",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.2608210019",
+        "Node name for S&R": "Image Comparer (rgthree)",
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        []
+      ]
+    },
+    {
+      "id": 32,
+      "type": "Any Switch (rgthree)",
+      "pos": [
+        4680,
+        80
+      ],
+      "size": [
+        260,
+        150
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "any_01",
+          "type": "IMAGE",
+          "link": 44,
+          "dir": 3
+        },
+        {
+          "name": "any_02",
+          "type": "IMAGE",
+          "link": 45,
+          "dir": 3
+        },
+        {
+          "name": "any_03",
+          "type": "IMAGE",
+          "link": 46,
+          "dir": 3
+        },
+        {
+          "name": "any_04",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "dir": 4,
+          "label": "IMAGE",
+          "name": "*",
+          "shape": 3,
+          "type": "IMAGE",
+          "links": [
+            47
+          ]
+        }
+      ],
+      "title": "Image to save",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.2608210019"
+      }
+    },
+    {
+      "id": 33,
+      "type": "SaveImage",
+      "pos": [
+        4680,
+        140
       ],
       "size": [
         420,
         560
       ],
       "flags": {},
-      "order": 28,
+      "order": 32,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 40
+          "link": 47
         },
         {
           "localized_name": "filename_prefix",
@@ -1857,59 +2059,6 @@
       "widgets_values_named": {
         "filename_prefix": "Prompto/anima"
       }
-    },
-    {
-      "id": 30,
-      "type": "Image Comparer (rgthree)",
-      "pos": [
-        4240,
-        80
-      ],
-      "size": [
-        820,
-        1100
-      ],
-      "flags": {},
-      "order": 29,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "image_a",
-          "name": "image_a",
-          "type": "IMAGE",
-          "shape": 7,
-          "link": 41,
-          "dir": 3
-        },
-        {
-          "localized_name": "image_b",
-          "name": "image_b",
-          "type": "IMAGE",
-          "shape": 7,
-          "link": 42,
-          "dir": 3
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "images",
-          "name": "images",
-          "type": "IMAGE",
-          "links": null,
-          "dir": 4,
-          "shape": 3
-        }
-      ],
-      "title": "COMPARES RESAMPLED TO UPSCALED",
-      "properties": {
-        "cnr_id": "rgthree-comfy",
-        "ver": "1.0.2608210019",
-        "Node name for S&R": "Image Comparer (rgthree)",
-        "comparer_mode": "Slide"
-      },
-      "widgets_values": [
-        []
-      ]
     }
   ],
   "links": [
@@ -1949,7 +2098,7 @@
       5,
       7,
       0,
-      10,
+      11,
       0,
       "CLIP"
     ],
@@ -1957,7 +2106,7 @@
       6,
       5,
       0,
-      10,
+      11,
       1,
       "STRING"
     ],
@@ -1965,7 +2114,7 @@
       7,
       7,
       0,
-      11,
+      12,
       0,
       "CLIP"
     ],
@@ -1973,23 +2122,23 @@
       8,
       6,
       0,
-      12,
+      13,
       0,
       "MODEL"
     ],
     [
       9,
-      10,
+      11,
       0,
-      12,
+      13,
       1,
       "CONDITIONING"
     ],
     [
       10,
-      11,
-      0,
       12,
+      0,
+      13,
       2,
       "CONDITIONING"
     ],
@@ -1997,15 +2146,15 @@
       11,
       9,
       0,
-      12,
+      13,
       3,
       "LATENT"
     ],
     [
       12,
-      12,
-      0,
       13,
+      0,
+      14,
       0,
       "LATENT"
     ],
@@ -2013,31 +2162,31 @@
       13,
       8,
       0,
-      13,
+      14,
       1,
       "VAE"
     ],
     [
       14,
-      13,
-      0,
       14,
       0,
-      "IMAGE"
-    ],
-    [
-      15,
-      13,
-      0,
       15,
       0,
       "IMAGE"
     ],
     [
-      16,
       15,
+      14,
       0,
       16,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      16,
+      0,
+      17,
       0,
       "IMAGE"
     ],
@@ -2045,7 +2194,7 @@
       17,
       8,
       0,
-      16,
+      17,
       1,
       "VAE"
     ],
@@ -2053,39 +2202,39 @@
       18,
       6,
       0,
-      17,
+      18,
       0,
       "MODEL"
     ],
     [
       19,
-      10,
+      11,
       0,
-      17,
+      18,
       1,
       "CONDITIONING"
     ],
     [
       20,
-      11,
+      12,
       0,
-      17,
+      18,
       2,
       "CONDITIONING"
     ],
     [
       21,
-      16,
-      0,
       17,
+      0,
+      18,
       3,
       "LATENT"
     ],
     [
       22,
-      17,
-      0,
       18,
+      0,
+      19,
       0,
       "LATENT"
     ],
@@ -2093,31 +2242,31 @@
       23,
       8,
       0,
-      18,
+      19,
       1,
       "VAE"
     ],
     [
       24,
-      18,
-      0,
       19,
+      0,
+      20,
       0,
       "IMAGE"
     ],
     [
       25,
-      18,
+      19,
       0,
-      20,
+      21,
       0,
       "IMAGE"
     ],
     [
       26,
-      20,
-      0,
       21,
+      0,
+      22,
       0,
       "IMAGE"
     ],
@@ -2125,7 +2274,7 @@
       27,
       8,
       0,
-      21,
+      22,
       1,
       "VAE"
     ],
@@ -2133,39 +2282,39 @@
       28,
       6,
       0,
-      22,
+      23,
       0,
       "MODEL"
     ],
     [
       29,
-      10,
+      11,
       0,
-      22,
+      23,
       1,
       "CONDITIONING"
     ],
     [
       30,
-      11,
+      12,
       0,
-      22,
+      23,
       2,
       "CONDITIONING"
     ],
     [
       31,
-      21,
-      0,
       22,
+      0,
+      23,
       3,
       "LATENT"
     ],
     [
       32,
-      22,
-      0,
       23,
+      0,
+      24,
       0,
       "LATENT"
     ],
@@ -2173,45 +2322,45 @@
       33,
       8,
       0,
-      23,
+      24,
       1,
       "VAE"
     ],
     [
       34,
-      23,
-      0,
       24,
+      0,
+      25,
       0,
       "IMAGE"
     ],
     [
       35,
-      13,
+      14,
       0,
-      25,
+      26,
       0,
       "IMAGE"
     ],
     [
       36,
-      23,
+      24,
       0,
-      25,
+      26,
       1,
       "IMAGE"
     ],
     [
       37,
-      26,
+      24,
       0,
       27,
       0,
-      "UPSCALE_MODEL"
+      "IMAGE"
     ],
     [
       38,
-      23,
+      14,
       0,
       27,
       1,
@@ -2219,23 +2368,23 @@
     ],
     [
       39,
-      27,
+      29,
       0,
       28,
       0,
-      "IMAGE"
+      "UPSCALE_MODEL"
     ],
     [
       40,
+      27,
+      0,
       28,
-      0,
-      29,
-      0,
+      1,
       "IMAGE"
     ],
     [
       41,
-      23,
+      28,
       0,
       30,
       0,
@@ -2243,10 +2392,50 @@
     ],
     [
       42,
-      28,
+      27,
       0,
+      31,
+      0,
+      "IMAGE"
+    ],
+    [
+      43,
       30,
+      0,
+      31,
       1,
+      "IMAGE"
+    ],
+    [
+      44,
+      30,
+      0,
+      32,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      24,
+      0,
+      32,
+      1,
+      "IMAGE"
+    ],
+    [
+      46,
+      14,
+      0,
+      32,
+      2,
+      "IMAGE"
+    ],
+    [
+      47,
+      32,
+      0,
+      33,
+      0,
       "IMAGE"
     ]
   ],
@@ -2277,7 +2466,7 @@
     },
     {
       "id": 3,
-      "title": "Resample · two light passes at ×1.25 then ×1.2",
+      "title": "Resample · two light passes at ×1.25 then ×1.2 ~",
       "bounding": [
         1820,
         0,
@@ -2289,12 +2478,24 @@
     },
     {
       "id": 4,
-      "title": "Upscale · 4× model, saved at ×2",
+      "title": "Upscale · 4× model, back down to ×2 ~",
       "bounding": [
         3400,
         0,
-        1680,
+        1220,
         1200
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Save ~",
+      "bounding": [
+        4660,
+        0,
+        460,
+        720
       ],
       "color": "#3f789e",
       "flags": {}

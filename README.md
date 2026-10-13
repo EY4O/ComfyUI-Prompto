@@ -53,7 +53,9 @@ In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast**
 - **Upscale** with a 4× model, then scale back down to ×2 (2688×3456) and save. Set the last scale to 1.0 to keep the full ×4.
 - **Compare** with two slider comparers: the generated image against the resampled one, and the resampled image against the upscale.
 
-The comparers come from [rgthree-comfy](https://github.com/rgthree/rgthree-comfy); everything else is core ComfyUI plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
+The Resample, Upscale and Save groups end in `~`, so the **Fast Groups Bypasser** in the generate group turns each one on or off. Switches in front of the upscaler and the save node pick the latest stage that's still on: turn off Resample and the generated image is upscaled, turn off Upscale and the resampled image is saved.
+
+The comparers, switches and bypasser come from [rgthree-comfy](https://github.com/rgthree/rgthree-comfy); everything else is core ComfyUI plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
 
 Open either workflow from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own model.
 
