@@ -63,3 +63,38 @@ def test_recipe_values_rolls_and_defaults():
     assert (v["seed"], v["steps"], v["cfg"], v["width"], v["sampler"]) == (42, 30, 4.5, 832, "euler_ancestral")
     blank = L.recipe_values({"positive": "x"}, 1, [])
     assert (blank["negative"], blank["steps"], blank["sampler"], blank["scheduler"]) == ("", 28, "euler", "normal")
+
+
+def test_renamed_items_are_found_by_their_old_label():
+    old = {"snippets": [{"id": "s1", "cat": "Lighting", "name": "Golden hour"}],
+           "recipes": [{"id": "r1", "no": 1, "title": "Rainy neon alley"}],
+           "cast": [{"id": "c1", "name": "Rin"}]}
+    new = {"snippets": [{"id": "s1", "cat": "Light setups", "name": "Magic hour"}],
+           "recipes": [{"id": "r1", "no": 1, "title": "Rainy alley"}],
+           "cast": [{"id": "c1", "name": "Rin Aozora"}]}
+    aliases = L.update_aliases(old, new)
+    assert aliases["snippets"] == {"Lighting · Golden hour": "s1"}
+    s = L.find(new["snippets"], "Lighting · Golden hour", L.snippet_label, aliases["snippets"])
+    assert s["name"] == "Magic hour"
+    assert L.find(new["recipes"], "No. 001 · Rainy neon alley", L.recipe_label, aliases["recipes"])["id"] == "r1"
+    assert L.find(new["cast"], "Rin", L.cast_label, aliases["cast"])["id"] == "c1"
+    # a second rename keeps the first old label working
+    newer = {"snippets": [{"id": "s1", "cat": "Light setups", "name": "Blue hour"}]}
+    chained = L.update_aliases(new, newer, aliases)
+    assert chained["snippets"]["Lighting · Golden hour"] == "s1"
+    assert chained["snippets"]["Light setups · Magic hour"] == "s1"
+
+
+def test_a_label_in_use_belongs_to_the_live_item():
+    old = {"cast": [{"id": "c1", "name": "Rin"}]}
+    mid = {"cast": [{"id": "c1", "name": "Rin Aozora"}]}
+    aliases = L.update_aliases(old, mid)
+    later = {"cast": [{"id": "c1", "name": "Rin Aozora"}, {"id": "c2", "name": "Rin"}]}
+    aliases = L.update_aliases(mid, later, aliases)
+    assert "Rin" not in aliases["cast"]
+    assert L.find(later["cast"], "Rin", L.cast_label, aliases["cast"])["id"] == "c2"
+
+
+def test_deleted_items_are_not_found_through_aliases():
+    aliases = {"Rin": "c1"}
+    assert L.find([{"id": "c2", "name": "Vale"}], "Rin", L.cast_label, aliases) is None

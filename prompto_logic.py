@@ -40,8 +40,39 @@ def labels(items, fn):
     return out or [EMPTY]
 
 
-def find(items, label, fn):
-    return next((it for it in items or [] if fn(it) == label), None)
+def find(items, label, fn, aliases=None):
+    """The item with this dropdown label, or, when it was renamed in Prompto since
+    the workflow was saved, the item that label used to belong to."""
+    hit = next((it for it in items or [] if fn(it) == label), None)
+    if hit or not aliases or label not in aliases:
+        return hit
+    return next((it for it in items or [] if it.get("id") == aliases[label]), None)
+
+
+# ---------- earlier names ----------
+# A saved workflow keeps the label it was saved with. When a sync shows an item
+# (same id) under a new label, the old label is remembered so the node still finds it.
+MAX_ALIASES = 500
+
+
+def update_aliases(old, new, aliases=None):
+    fns = {"recipes": recipe_label, "snippets": snippet_label, "cast": cast_label}
+    out = {k: dict(v) for k, v in (aliases or {}).items() if k in fns and isinstance(v, dict)}
+    for kind, fn in fns.items():
+        before = {it.get("id"): fn(it) for it in (old or {}).get(kind) or [] if it.get("id")}
+        bucket = out.setdefault(kind, {})
+        for it in (new or {}).get(kind) or []:
+            was = before.get(it.get("id"))
+            if was and was != fn(it):
+                bucket.pop(was, None)       # re-added last, so it's kept longest
+                bucket[was] = it["id"]
+        # A label a live item uses now belongs to that item, not to an old one.
+        live = {fn(it) for it in (new or {}).get(kind) or []}
+        for label in [l for l in bucket if l in live]:
+            del bucket[label]
+        while len(bucket) > MAX_ALIASES:
+            bucket.pop(next(iter(bucket)))
+    return out
 
 
 def outfit_names(cast):

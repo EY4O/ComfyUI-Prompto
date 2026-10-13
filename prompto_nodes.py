@@ -20,6 +20,11 @@ def library():
     return store.get_library() or {}
 
 
+def aliases(lib, kind):
+    """Labels items had before they were renamed in Prompto."""
+    return (lib.get("aliases") or {}).get(kind) or {}
+
+
 def synced_at():
     return (store.get_library() or {}).get("syncedAt")
 
@@ -54,7 +59,7 @@ class PromptoRecipe(_PromptoNode):
 
     def run(self, recipe, roll):
         lib = library()
-        r = L.find(lib.get("recipes"), recipe, L.recipe_label)
+        r = L.find(lib.get("recipes"), recipe, L.recipe_label, aliases(lib, "recipes"))
         if not r:
             raise ValueError(f"Prompto has no recipe called “{recipe}”. Open Prompto in Chrome with this ComfyUI tab open, then press R.")
         v = L.recipe_values(r, roll, lib.get("snippets"))
@@ -80,7 +85,8 @@ class PromptoCharacter(_PromptoNode):
     DESCRIPTION = "A Prompto cast member's tags and/or prose, with an outfit."
 
     def run(self, character, outfit, format, seed):
-        c = L.find(library().get("cast"), character, L.cast_label)
+        lib = library()
+        c = L.find(lib.get("cast"), character, L.cast_label, aliases(lib, "cast"))
         if not c:
             raise ValueError(f"Prompto has no cast member called “{character}”. Sync from Chrome, then press R.")
         return L.character_text(c, outfit, format, seed)
@@ -103,7 +109,7 @@ class PromptoSnippet(_PromptoNode):
 
     def run(self, snippet, format, roll):
         lib = library()
-        s = L.find(lib.get("snippets"), snippet, L.snippet_label)
+        s = L.find(lib.get("snippets"), snippet, L.snippet_label, aliases(lib, "snippets"))
         if not s:
             raise ValueError(f"Prompto has no snippet called “{snippet}”. Sync from Chrome, then press R.")
         text = ", ".join(s.get("tags") or []) if format == "tags" else (s.get("prose") or ", ".join(s.get("tags") or []))

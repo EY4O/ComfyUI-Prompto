@@ -11,6 +11,11 @@ import threading
 import time
 import uuid
 
+try:
+    from . import prompto_logic as L
+except ImportError:  # imported bare, as the tests do
+    import prompto_logic as L
+
 MAX_CAPTURES = 100
 MAX_LIBRARY_BYTES = 25 * 1024 * 1024
 MAX_CAPTURE_BYTES = 4 * 1024 * 1024
@@ -65,6 +70,8 @@ class Store:
                 raise ValueError(f"{key} must be a list")
             clean[key] = value
         with self.lock:
+            old = self._read("library.json", None) or {}
+            clean["aliases"] = L.update_aliases(old, clean, old.get("aliases"))
             self._write("library.json", clean)
         return clean["syncedAt"]
 
