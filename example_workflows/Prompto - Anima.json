@@ -1,8 +1,8 @@
 {
   "id": "78b69dcb-9289-5ea2-b8c3-ecd515c024db",
   "revision": 0,
-  "last_node_id": 28,
-  "last_link_id": 38,
+  "last_node_id": 30,
+  "last_link_id": 42,
   "nodes": [
     {
       "id": 1,
@@ -898,7 +898,8 @@
           "type": "IMAGE",
           "links": [
             14,
-            15
+            15,
+            35
           ]
         }
       ],
@@ -1544,7 +1545,9 @@
           "type": "IMAGE",
           "links": [
             34,
-            36
+            36,
+            38,
+            41
           ]
         }
       ],
@@ -1595,9 +1598,62 @@
     },
     {
       "id": 25,
+      "type": "Image Comparer (rgthree)",
+      "pos": [
+        2520,
+        80
+      ],
+      "size": [
+        820,
+        1100
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image_a",
+          "name": "image_a",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 35,
+          "dir": 3
+        },
+        {
+          "localized_name": "image_b",
+          "name": "image_b",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 36,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null,
+          "dir": 4,
+          "shape": 3
+        }
+      ],
+      "title": "COMPARES GENERATED TO RESAMPLED",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.2608210019",
+        "Node name for S&R": "Image Comparer (rgthree)",
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        []
+      ]
+    },
+    {
+      "id": 26,
       "type": "UpscaleModelLoader",
       "pos": [
-        2560,
+        3420,
         80
       ],
       "size": [
@@ -1605,7 +1661,7 @@
         60
       ],
       "flags": {},
-      "order": 24,
+      "order": 25,
       "mode": 0,
       "inputs": [
         {
@@ -1624,7 +1680,7 @@
           "name": "UPSCALE_MODEL",
           "type": "UPSCALE_MODEL",
           "links": [
-            35
+            37
           ]
         }
       ],
@@ -1641,10 +1697,10 @@
       }
     },
     {
-      "id": 26,
+      "id": 27,
       "type": "ImageUpscaleWithModel",
       "pos": [
-        2560,
+        3420,
         190
       ],
       "size": [
@@ -1652,20 +1708,20 @@
         50
       ],
       "flags": {},
-      "order": 25,
+      "order": 26,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "upscale_model",
           "name": "upscale_model",
           "type": "UPSCALE_MODEL",
-          "link": 35
+          "link": 37
         },
         {
           "localized_name": "image",
           "name": "image",
           "type": "IMAGE",
-          "link": 36
+          "link": 38
         }
       ],
       "outputs": [
@@ -1674,7 +1730,7 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            37
+            39
           ]
         }
       ],
@@ -1686,10 +1742,10 @@
       "widgets_values": []
     },
     {
-      "id": 27,
+      "id": 28,
       "type": "ImageScaleBy",
       "pos": [
-        2560,
+        3420,
         290
       ],
       "size": [
@@ -1697,14 +1753,14 @@
         90
       ],
       "flags": {},
-      "order": 26,
+      "order": 27,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "image",
           "name": "image",
           "type": "IMAGE",
-          "link": 37
+          "link": 39
         },
         {
           "localized_name": "upscale_method",
@@ -1731,7 +1787,8 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            38
+            40,
+            42
           ]
         }
       ],
@@ -1751,10 +1808,10 @@
       }
     },
     {
-      "id": 28,
+      "id": 29,
       "type": "SaveImage",
       "pos": [
-        2920,
+        3780,
         80
       ],
       "size": [
@@ -1762,14 +1819,14 @@
         560
       ],
       "flags": {},
-      "order": 27,
+      "order": 28,
       "mode": 0,
       "inputs": [
         {
           "localized_name": "images",
           "name": "images",
           "type": "IMAGE",
-          "link": 38
+          "link": 40
         },
         {
           "localized_name": "filename_prefix",
@@ -1800,6 +1857,59 @@
       "widgets_values_named": {
         "filename_prefix": "Prompto/anima"
       }
+    },
+    {
+      "id": 30,
+      "type": "Image Comparer (rgthree)",
+      "pos": [
+        4240,
+        80
+      ],
+      "size": [
+        820,
+        1100
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image_a",
+          "name": "image_a",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 41,
+          "dir": 3
+        },
+        {
+          "localized_name": "image_b",
+          "name": "image_b",
+          "type": "IMAGE",
+          "shape": 7,
+          "link": 42,
+          "dir": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": null,
+          "dir": 4,
+          "shape": 3
+        }
+      ],
+      "title": "COMPARES RESAMPLED TO UPSCALED",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "1.0.2608210019",
+        "Node name for S&R": "Image Comparer (rgthree)",
+        "comparer_mode": "Slide"
+      },
+      "widgets_values": [
+        []
+      ]
     }
   ],
   "links": [
@@ -2077,17 +2187,17 @@
     ],
     [
       35,
+      13,
+      0,
       25,
       0,
-      26,
-      0,
-      "UPSCALE_MODEL"
+      "IMAGE"
     ],
     [
       36,
       23,
       0,
-      26,
+      25,
       1,
       "IMAGE"
     ],
@@ -2097,14 +2207,46 @@
       0,
       27,
       0,
-      "IMAGE"
+      "UPSCALE_MODEL"
     ],
     [
       38,
+      23,
+      0,
+      27,
+      1,
+      "IMAGE"
+    ],
+    [
+      39,
       27,
       0,
       28,
       0,
+      "IMAGE"
+    ],
+    [
+      40,
+      28,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ],
+    [
+      41,
+      23,
+      0,
+      30,
+      0,
+      "IMAGE"
+    ],
+    [
+      42,
+      28,
+      0,
+      30,
+      1,
       "IMAGE"
     ]
   ],
@@ -2139,8 +2281,8 @@
       "bounding": [
         1820,
         0,
-        680,
-        1160
+        1540,
+        1200
       ],
       "color": "#3f789e",
       "flags": {}
@@ -2149,10 +2291,10 @@
       "id": 4,
       "title": "Upscale · 4× model, saved at ×2",
       "bounding": [
-        2540,
+        3400,
         0,
-        820,
-        660
+        1680,
+        1200
       ],
       "color": "#3f789e",
       "flags": {}

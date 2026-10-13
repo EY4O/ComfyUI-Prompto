@@ -51,8 +51,9 @@ In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast**
 - **Generate** at 896×1152 with Anima's recommended settings (30 steps, CFG 4, er_sde). The character comes in as **tags + prose**, because Anima's Qwen3 text encoder reads plain sentences as well as tags.
 - **Resample** twice: scale ×1.25 then ×1.2, re-encode, and sample again at 0.25 then 0.2 denoise. That cleans up line work and eyes without moving the composition, and stays under Anima's 1536² limit.
 - **Upscale** with a 4× model, then scale back down to ×2 (2688×3456) and save. Set the last scale to 1.0 to keep the full ×4.
+- **Compare** with two slider comparers: the generated image against the resampled one, and the resampled image against the upscale.
 
-It uses only core nodes plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
+The comparers come from [rgthree-comfy](https://github.com/rgthree/rgthree-comfy); everything else is core ComfyUI plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
 
 Open either workflow from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own model.
 
