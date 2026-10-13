@@ -37,7 +37,7 @@ In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast**
 
 <sub>Recorded with Prompto 0.16 and ComfyUI-Prompto 0.4 on an Illustrious checkpoint. The post's artwork is blurred.</sub>
 
-## 🧩 Example workflow
+## 🧩 Example workflows
 
 <p align="center"><img src="docs/images/workflow.png" alt="An Illustrious workflow built from Prompto nodes"><br><sub>Both images made with an Illustrious checkpoint and Prompto's sample library.</sub></p>
 
@@ -46,7 +46,15 @@ In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast**
 - **A recipe straight to an image** — **Prompto Recipe** drives everything: prompt, negative, seed, steps, CFG, sampler, scheduler and size.
 - **Composing a prompt** — **Prompto Wildcards** rolls the scene, **Prompto Character** adds a cast member in an outfit, and **Prompto Snippet** adds the lighting, joined with ComfyUI's **Concatenate Text**. It reuses the recipe's negative and sampler settings.
 
-Open it from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own checkpoint.
+**Prompto - Anima** composes a prompt the same way, then runs it through Anima with a finishing chain:
+
+- **Generate** at 896×1152 with Anima's recommended settings (30 steps, CFG 4, er_sde). The character comes in as **tags + prose**, because Anima's Qwen3 text encoder reads plain sentences as well as tags.
+- **Resample** twice: scale ×1.25 then ×1.2, re-encode, and sample again at 0.25 then 0.2 denoise. That cleans up line work and eyes without moving the composition, and stays under Anima's 1536² limit.
+- **Upscale** with a 4× model, then scale back down to ×2 (2688×3456) and save. Set the last scale to 1.0 to keep the full ×4.
+
+It uses only core nodes plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
+
+Open either workflow from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own model.
 
 ---
 
