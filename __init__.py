@@ -13,5 +13,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {}
 if __package__:
     from . import prompto_routes  # noqa: F401  (registers the /prompto routes)
     from .prompto_nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+    from .prompto_banner import show
+
+    show(prompto_routes.VERSION, len(NODE_CLASS_MAPPINGS))
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

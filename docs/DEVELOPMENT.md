@@ -42,6 +42,7 @@ python -m pytest tests
 | Suite | Covers |
 |---|---|
 | `test_store` | Library snapshot round trip and validation, earlier names kept across syncs; the capture queue: add, validate, acknowledge, and the 100-item cap; reading the version from `pyproject.toml` |
+| `test_banner` | The startup banner, and its plain one-line fallback for consoles that can't show Braille |
 | `test_logic` | Node logic: dropdown labels, wildcard rolls, outfits (fixed, none, random), character formats, recipe values and defaults, finding renamed items by their old label |
 
 `web/missing.js` has its own Node test (Node 18+, no ComfyUI): `node --test tests/test_missing.mjs`. It covers the recipe/1 conversion, missing-model detection and the Model Librarian notice.
