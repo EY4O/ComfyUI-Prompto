@@ -119,7 +119,8 @@ Prompto calls these through the open ComfyUI tab. Without this extension it fall
 <details>
 <summary><b>⚡ How a recipe is loaded</b></summary>
 
-- The prompt node is found by following the sampler's **positive** and **negative** inputs back to the node holding the text, through ControlNet and guidance nodes. Flux-style workflows are found through their **Guider** node.
+- The prompt node is found by following the sampler's **positive** and **negative** inputs back to the node holding the text, through ControlNet and guidance nodes, switches, text joins and regex replaces. Flux-style workflows are found through their **Guider** node. A text box wired to another node is skipped (ComfyUI ignores what's typed in it), and Impact's wildcard processor gets the prompt as both its template and its rolled text.
+- Muted and bypassed nodes are never changed. A setting whose box on the sampler is wired to another node (an **Input Parameters** node, a primitive, a "show any" passthrough) is written where it comes from, and the size goes to the empty latent's inputs the same way.
 - Seed, steps, CFG, sampler and scheduler go to the first sampler, so a hires-fix pass keeps its own steps.
 - Dropdown settings (sampler, scheduler, model) are only changed when the value is one of that dropdown's options. A model is matched by file name even if it sits in a subfolder.
 - Size goes to the first node with both **width** and **height**.

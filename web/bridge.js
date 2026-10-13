@@ -16,16 +16,29 @@ export const version = api.fetchApi("/prompto/status")
 // Any text box counts: CLIP Text Encode's "text", SDXL/Flux encoders' split
 // boxes, string primitives, wildcard nodes, and any other multiline widget.
 const PROMPT_NAMES = ["text", "prompt", "text_g", "text_l", "clip_l", "t5xxl"];
-const TEXT_NAMES = [...PROMPT_NAMES, "positive", "wildcard_text", "string", "value", "text_positive"];
+const TEXT_NAMES = [...PROMPT_NAMES, "positive", "wildcard_text", "populated_text", "string", "value", "text_positive"];
 const isTextWidget = (w) => typeof w.value === "string" && (TEXT_NAMES.includes(w.name) || w.type === "customtext" || !!(w.options && w.options.multiline));
 const textWidgets = (n) => (n.widgets || []).filter(isTextWidget);
 const textWidget = (n) => textWidgets(n)[0];
 
+// A box whose input socket is wired to another node is ignored by ComfyUI.
+const linkedTo = (n, name) => (n.inputs || []).find((i) => i.link != null && (i.widget ? i.widget.name === name : i.name === name));
+const freeText = (n) => textWidgets(n).filter((w) => !linkedTo(n, w.name));
+function source(n, i) {
+  const slot = n.inputs.indexOf(i);
+  const src = n.getInputNode?.(slot);
+  const l = n.getInputLink?.(slot);
+  return src ? [src, l?.origin_slot ?? 0] : null;
+}
+
 // Writes a prompt into every prompt box of an encoder (SDXL has text_g and
-// text_l, Flux has clip_l and t5xxl), or its first text box otherwise.
+// text_l, Flux has clip_l and t5xxl), into both of Impact's wildcard boxes
+// (template and rolled text), or into its first free text box otherwise.
 function setPrompt(node, v) {
-  const boxes = textWidgets(node).filter((w) => PROMPT_NAMES.includes(w.name));
-  for (const w of boxes.length ? boxes : [textWidget(node)]) setWidgetValue(w, v);
+  const free = freeText(node);
+  const boxes = free.filter((w) => PROMPT_NAMES.includes(w.name));
+  const wild = free.filter((w) => w.name === "wildcard_text" || w.name === "populated_text");
+  for (const w of boxes.length ? boxes : wild.length ? wild : free.slice(0, 1)) setWidgetValue(w, v);
 }
 
 // Adds text at the cursor, with commas where the neighbouring text needs them.
@@ -65,17 +78,51 @@ function dirty() {
   app.canvas?.setDirty?.(true, true);
 }
 
-// Walks conditioning links back from a sampler input to the node holding the text.
+// Walks back from a sampler input to the node whose box really holds the text:
+// through conditioning, switches (input<select>), text joins (the longer side, so
+// LoRA trigger words stay put) and passthroughs such as a regex replace.
+const textLen = (n) => Math.max(0, ...freeText(n).map((w) => w.value.length));
 function upstreamText(node, inputName, depth = 0) {
-  if (!node || depth > 8 || !node.inputs) return null;
-  const slot = node.inputs.findIndex((i) => i.name === inputName);
-  if (slot < 0) return null;
-  const src = node.getInputNode?.(slot);
-  if (!src) return null;
-  if (textWidget(src)) return src;
-  for (const k of ["conditioning", "conditioning_1", "positive", "text"]) {
-    const found = upstreamText(src, k, depth + 1);
-    if (found) return found;
+  if (!node || depth > 16 || !node.inputs) return null;
+  const i = node.inputs.find((x) => x.name === inputName && x.link != null);
+  const s = i && source(node, i);
+  if (!s) return null;
+  const src = s[0];
+  if (freeText(src).some((w) => TEXT_NAMES.includes(w.name))) return src;
+  const sel = (src.widgets || []).find((w) => w.name === "select");
+  if (sel && Number.isInteger(Number(sel.value))) {
+    const r = upstreamText(src, "input" + Number(sel.value), depth + 1);
+    if (r) return r;
+  }
+  if ((src.inputs || []).some((x) => x.name === "string_a" || x.name === "string_b")) {
+    const sides = ["string_a", "string_b"].map((k) => upstreamText(src, k, depth + 1)).filter(Boolean);
+    if (sides.length) return sides.sort((a, b) => textLen(b) - textLen(a))[0];
+  }
+  for (const k of ["conditioning", "conditioning_1", "positive", "text", "string", "text_positive", "prompt"]) {
+    const r = upstreamText(src, k, depth + 1);
+    if (r) return r;
+  }
+  return freeText(src).length ? src : null;
+}
+
+// The widget a setting really comes from: its own, or the one on the node wired
+// into it (a parameters node, a primitive, or through a "show any" passthrough).
+function settingWidget(n, name, depth = 0) {
+  const own = (n.widgets || []).find((x) => x.name === name);
+  const i = linkedTo(n, name);
+  if (!i) return own || null;
+  const s = depth < 8 && source(n, i);
+  if (!s) return null;
+  let [src, slot] = s;
+  for (let hop = 0; hop < 3 && src; hop++) {
+    const out = src.outputs?.[slot]?.name;
+    for (const c of [out, name, "value"]) {
+      if (c && (src.widgets || []).some((x) => x.name === c)) { const r = settingWidget(src, c, depth + 1); if (r) return r; }
+    }
+    const wired = (src.inputs || []).filter((x) => x.link != null);
+    const next = wired.length === 1 ? source(src, wired[0]) : null;
+    if (!next) return null;
+    [src, slot] = next;
   }
   return null;
 }
@@ -111,12 +158,14 @@ export function apply(payload) {
     return { ok: true, applied: [where] };
   }
 
+  // Muted (2) and bypassed (4) nodes don't run, so nothing is written into them.
+  const active = nodes.filter((n) => n.mode !== 2 && n.mode !== 4);
   let pos = null, neg = null;
-  for (const n of nodes) {
+  for (const n of active) {
     pos = pos || upstreamText(n, "positive");
     neg = neg || upstreamText(n, "negative");
   }
-  if (!pos) for (const n of nodes) if (/Guider/.test(n.type || "")) pos = pos || upstreamText(n, "conditioning");
+  if (!pos) for (const n of active) if (/Guider/.test(n.type || "")) pos = pos || upstreamText(n, "conditioning");
   if (!pos) return { ok: false, error: "Couldn't find the prompt node in this workflow." };
 
   const applied = ["prompt"], warnings = [];
@@ -129,11 +178,12 @@ export function apply(payload) {
   // First match wins, samplers first, so a hires-fix pass keeps its own steps.
   // Combo widgets only take values from their own option list.
   const hasCond = (n) => (n.inputs || []).some((i) => i.name === "positive" || i.name === "noise");
-  const ordered = [...nodes].sort((a, b) => hasCond(b) - hasCond(a));
+  const ordered = [...active].sort((a, b) => hasCond(b) - hasCond(a));
   const setFirst = (names, v, label) => {
     if (v == null || v === "") return;
     for (const n of ordered) {
-      const w = (n.widgets || []).find((x) => names.includes(x.name));
+      const mine = (n.widgets || []).find((x) => names.includes(x.name));
+      const w = mine && settingWidget(n, mine.name);
       if (!w) continue;
       const opts = Array.isArray(w.options?.values) ? w.options.values : null;
       const base = (s) => String(s).split(/[\\/]/).pop();
@@ -154,9 +204,10 @@ export function apply(payload) {
   setFirst(["scheduler"], s.scheduler, "scheduler");
   setFirst(["ckpt_name", "unet_name"], s.model, "model");
   if (s.width && s.height) {
-    const latent = nodes.find((n) => ["width", "height"].every((k) => (n.widgets || []).some((w) => w.name === k)));
+    const sized = active.filter((n) => ["width", "height"].every((k) => (n.widgets || []).some((w) => w.name === k)));
+    const latent = sized.find((n) => /latent/i.test(n.type || "")) || sized[0];
     if (latent) {
-      for (const k of ["width", "height"]) setWidgetValue(latent.widgets.find((w) => w.name === k), Number(s[k]));
+      for (const k of ["width", "height"]) setWidgetValue(settingWidget(latent, k), Number(s[k]));
       applied.push("size");
     }
   }
