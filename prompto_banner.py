@@ -18,7 +18,9 @@ ART = """\
 
 
 def banner(version, nodes):
-    return f"{ART}\n[Prompto] ComfyUI-Prompto {version} loaded · {nodes} nodes"
+    # ComfyUI's log puts a timestamp before each print; starting on a fresh line
+    # keeps the first row of the art lined up with the rest.
+    return f"\n{ART}\n[Prompto] ComfyUI-Prompto {version} loaded · {nodes} nodes"
 
 
 def show(version, nodes, out=None):

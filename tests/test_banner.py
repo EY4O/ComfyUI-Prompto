@@ -9,7 +9,8 @@ import prompto_banner as B  # noqa: E402
 
 def test_banner_has_the_art_and_the_version():
     text = B.banner("1.2.3", 4)
-    assert text.count("\n") == 14  # 14 lines of art, then the version line
+    assert text.startswith("\n")  # the art starts below ComfyUI's timestamp
+    assert text.count("\n") == 15  # a blank line, 14 lines of art, then the version line
     assert text.endswith("[Prompto] ComfyUI-Prompto 1.2.3 loaded · 4 nodes")
 
 
