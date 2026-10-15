@@ -1,6 +1,7 @@
 """Text logic behind the Prompto nodes, kept free of ComfyUI imports so it can
 be tested on its own. It works on the library snapshot the Prompto Chrome
-extension syncs (recipes, snippets and cast, prompts already rendered).
+extension syncs (recipes, snippets, cast and model profiles, prompts already
+rendered).
 """
 
 import random
@@ -8,6 +9,7 @@ import re
 
 NONE, RANDOM = "(none)", "(random)"
 EMPTY = "(sync Prompto first)"
+OWN = "(recipe's own)"
 
 _CHOICE = re.compile(r"\{([^{}]*\|[^{}]*)\}")
 _NAMED = re.compile(r"__([\w-]+)__")
@@ -28,6 +30,10 @@ def snippet_label(s):
 
 def cast_label(c):
     return c.get("name") or "Unnamed"
+
+
+def profile_label(p):
+    return p.get("label") or p.get("id") or "Profile"
 
 
 def labels(items, fn):
@@ -56,7 +62,7 @@ MAX_ALIASES = 500
 
 
 def update_aliases(old, new, aliases=None):
-    fns = {"recipes": recipe_label, "snippets": snippet_label, "cast": cast_label}
+    fns = {"recipes": recipe_label, "snippets": snippet_label, "cast": cast_label, "profiles": profile_label}
     out = {k: dict(v) for k, v in (aliases or {}).items() if k in fns and isinstance(v, dict)}
     for kind, fn in fns.items():
         before = {it.get("id"): fn(it) for it in (old or {}).get(kind) or [] if it.get("id")}
@@ -148,18 +154,34 @@ def character_text(c, outfit, fmt, seed):
     return text, (o or {}).get("name", "")
 
 
-def recipe_values(r, roll, snippets):
-    """Everything a Recipe node outputs, with wildcards rolled."""
-    s = r.get("settings") or {}
-    pos = expand(r.get("positive") or "", roll, snippets)
-    neg = r.get("negative")
-    neg = expand(neg, roll + 1, snippets) if neg else ""
+def _num(v, kind, default):
+    try:
+        return kind(v)
+    except (TypeError, ValueError):
+        return default
 
-    def num(v, kind, default):
-        try:
-            return kind(v)
-        except (TypeError, ValueError):
-            return default
+
+SETTING_KEYS = ("sampler", "scheduler", "steps", "cfg", "width", "height")
+
+
+def recipe_values(r, roll, snippets, profile=None):
+    """Everything a Recipe node outputs, with wildcards rolled. With another
+    profile, the prompt is the one Prompto wrote for that profile and the
+    sampler settings are that profile's; the seed stays the recipe's."""
+    s = dict(r.get("settings") or {})
+    pos, neg = r.get("positive") or "", r.get("negative")
+    other = profile and profile.get("id") != r.get("profileId")
+    if other:
+        out = (r.get("renders") or {}).get(profile.get("id"))
+        if out:
+            pos, neg = out.get("positive") or "", out.get("negative")
+        else:
+            # A snapshot from before Prompto 0.24 has no renders: add the profile's wrapping.
+            pos, neg = profile_text(profile, pos), profile.get("negative")
+        s.update({k: v for k, v in (profile.get("settings") or {}).items() if k in SETTING_KEYS and v not in (None, "")})
+    pos = expand(pos, roll, snippets)
+    neg = expand(neg, roll + 1, snippets) if neg else ""
+    num = _num
 
     return {
         "positive": pos,
@@ -172,3 +194,71 @@ def recipe_values(r, roll, snippets):
         "sampler": s.get("sampler") or "euler",
         "scheduler": s.get("scheduler") or "normal",
     }
+
+
+# ---------- model profiles ----------
+# Tags written "@name" are artists (the @_@ emoticon isn't one). Profiles that
+# don't want the @ get the bare name.
+_ARTIST = re.compile(r"(^|[,\n(]\s*)@(?!_@(?=\s*(?:[,)\n]|$)))(?=\S)")
+
+
+def artist_style(text, keep_at):
+    return str(text or "") if keep_at else _ARTIST.sub(r"\1", str(text or ""))
+
+
+def _tag_key(t):
+    return re.sub(r"\s+", " ", t.strip().lower().replace("_", " "))
+
+
+def profile_text(profile, text):
+    """Text as a profile writes it: the quality tags first (for tag and tags +
+    prose profiles, skipping any the text already has), artist tags in its style."""
+    text = artist_style(text, profile.get("artistAt")).strip()
+    prefix = [t for t in profile.get("prefix") or [] if t] if profile.get("format") != "prose" else []
+    have = {_tag_key(t) for t in re.split(r"[,\n]", text) if t.strip()}
+    prefix = [t for t in prefix if _tag_key(t) not in have]
+    return ", ".join(prefix + ([text] if text else []))
+
+
+def profile_values(profile, text, snippets=None, seed=0):
+    """Everything a Profile node outputs."""
+    st = profile.get("settings") or {}
+    neg = profile.get("negative")
+    return {
+        "positive": expand(profile_text(profile, text), seed, snippets),
+        "negative": neg or "",
+        "steps": _num(st.get("steps"), int, 28),
+        "cfg": _num(st.get("cfg"), float, 5.0),
+        "width": _num(st.get("width"), int, 1024),
+        "height": _num(st.get("height"), int, 1024),
+        "sampler": st.get("sampler") or "euler",
+        "scheduler": st.get("scheduler") or "normal",
+    }
+
+
+# ---------- LoRAs ----------
+def lora_stem(name):
+    """File name without folders or extension, lowercased, for matching across machines."""
+    base = re.split(r"[\\/]", str(name or ""))[-1]
+    return re.sub(r"\.(safetensors|ckpt|pt|pth|bin)$", "", base, flags=re.I).lower()
+
+
+def loras_for(recipe=None, character=None):
+    """[(name, weight)] from a recipe's LoRAs and a cast member's, each once."""
+    out, seen = [], set()
+    items = list(((recipe or {}).get("settings") or {}).get("loras") or [])
+    if character and character.get("lora"):
+        items.append(character["lora"])
+    for it in items:
+        name = (it or {}).get("name")
+        if not name or lora_stem(name) in seen:
+            continue
+        seen.add(lora_stem(name))
+        out.append((name, _num(it.get("w"), float, 1.0)))
+    return out
+
+
+def match_lora(name, installed):
+    """The installed LoRA file with the same name, in any folder."""
+    key = lora_stem(name)
+    return next((f for f in installed or [] if lora_stem(f) == key), None)

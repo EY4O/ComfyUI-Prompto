@@ -19,8 +19,8 @@ def test_library_round_trip(store):
     assert synced == 123
     lib = store.get_library()
     # aliases holds labels items had before a rename; none yet
-    assert lib == {"syncedAt": 123, "recipes": [{"id": "r1"}], "snippets": [], "cast": [],
-                   "aliases": {"recipes": {}, "snippets": {}, "cast": {}}}
+    assert lib == {"syncedAt": 123, "recipes": [{"id": "r1"}], "snippets": [], "cast": [], "profiles": [],
+                   "aliases": {"recipes": {}, "snippets": {}, "cast": {}, "profiles": {}}}
 
 
 def test_library_rejects_bad_shapes(store):

@@ -103,6 +103,15 @@
             "name": "roll"
           },
           "link": null
+        },
+        {
+          "localized_name": "profile",
+          "name": "profile",
+          "type": "COMBO",
+          "widget": {
+            "name": "profile"
+          },
+          "link": null
         }
       ],
       "outputs": [
@@ -191,12 +200,14 @@
       "widgets_values": [
         "No. 001 · Rainy neon alley",
         1,
-        "fixed"
+        "fixed",
+        "(recipe's own)"
       ],
       "widgets_values_named": {
         "recipe": "No. 001 · Rainy neon alley",
         "roll": 1,
-        "control_after_generate": "fixed"
+        "control_after_generate": "fixed",
+        "profile": "(recipe's own)"
       },
       "color": "#2b5a5e",
       "bgcolor": "#1f3f42"

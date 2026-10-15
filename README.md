@@ -21,7 +21,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 ## ✨ Key Features
 
 - 🎟️ **Prompto sidebar** — your recipes, snippets and cast, synced from Chrome and searchable inside ComfyUI.
-- 🧩 **Prompto nodes** — **Prompto Recipe**, **Character**, **Snippet** and **Wildcards** put your library straight into a workflow, rolled fresh on every queue.
+- 🧩 **Prompto nodes** — **Prompto Recipe**, **Character**, **Snippet** and **Wildcards** put your library straight into a workflow, rolled fresh on every queue; **Prompto Profile** writes any prompt for a model, and **Prompto LoRAs** applies a recipe's or character's LoRAs.
 - ⚡ **Load into workflow** — one click writes a recipe's prompt and negative into the open workflow, plus its seed, steps, CFG, sampler, scheduler, model, size and LoRAs where they match.
 - ➕ **Add to a prompt box** — click into any prompt box and add a snippet, a character's tags or an outfit right at the cursor, or append to the text nodes you've selected.
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
@@ -48,7 +48,7 @@ In Chrome, **+ Prompto** on a booru post drafts a cast card and **File to cast**
 
 **Prompto - Anima** composes a prompt the same way, then runs it through Anima with a finishing chain:
 
-- **Generate** at 896×1152 with Anima's recommended settings (30 steps, CFG 4, er_sde). The character comes in as **tags + prose**, because Anima's Qwen3 text encoder reads plain sentences as well as tags.
+- **Generate** through **Prompto Profile** set to Anima: it puts the model card's quality tags in front of the prompt and supplies Anima's negative and settings (896×1152, 30 steps, CFG 4, er_sde). The character comes in as **tags + prose**, because Anima's Qwen3 text encoder reads plain sentences as well as tags.
 - **Resample** twice: scale ×1.25 then ×1.2, re-encode, and sample again at 0.25 then 0.2 denoise. That cleans up line work and eyes without moving the composition, and stays under Anima's 1536² limit.
 - **Upscale** with a 4× model, then scale back down to ×2 (2688×3456) and save. Set the last scale to 1.0 to keep the full ×4.
 - **Compare** with two slider comparers: the generated image against the resampled one, and the resampled image against the upscale.
@@ -57,7 +57,7 @@ The Resample, Upscale and Save groups end in `~`, so the **Fast Groups Bypasser*
 
 The comparers, switches and bypasser come from [rgthree-comfy](https://github.com/rgthree/rgthree-comfy); everything else is core ComfyUI plus Prompto. Put `qwen_3_06b_base.safetensors` in `text_encoders`, `qwen_image_vae.safetensors` in `vae`, an Anima model in `diffusion_models` and an upscale model such as `4x_foolhardy_Remacri.pth` in `upscale_models`.
 
-Open either workflow from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own model.
+Open either workflow from ComfyUI's **Templates** browser under **ComfyUI-Prompto**, or drag the JSON onto the canvas, then pick your own model. Both run before you've synced anything: Prompto's sample library ships with the nodes.
 
 ---
 
@@ -102,12 +102,16 @@ Find them under **Prompto** in the node menu. They read the library Prompto last
 
 | Node | Outputs |
 |---|---|
-| **Prompto Recipe** | `positive`, `negative`, `seed`, `steps`, `cfg`, `width`, `height`, `sampler`, `scheduler`: wire them into a KSampler and latent. `roll` picks the wildcards. |
+| **Prompto Recipe** | `positive`, `negative`, `seed`, `steps`, `cfg`, `width`, `height`, `sampler`, `scheduler`: wire them into a KSampler and latent. `roll` picks the wildcards. Set `profile` to write the recipe for another model: that profile's prompt and sampler settings, with the recipe's seed. |
 | **Prompto Character** | `text`: a cast member's tags, prose, or both, plus an outfit (a fixed one, **(none)** or **(random)**, chosen by `seed`), and `outfit`, the one used |
 | **Prompto Snippet** | `text`: a snippet's tags or prose |
 | **Prompto Wildcards** | `text`: any text with `{a\|b}` choices and `__snippet__` names rolled by `seed` |
+| **Prompto Profile** | `positive`, `negative`, `steps`, `cfg`, `width`, `height`, `sampler`, `scheduler`: wire any text into `text` and get it back the way that Prompto model profile writes it (quality tags first, artist tags as `@name` or bare), with the profile's negative and settings |
+| **Prompto LoRAs** | `model`, `clip`: a recipe's LoRAs and/or a cast member's LoRA applied, matched to your `loras` folder by file name in any subfolder, each at Prompto's weight times `strength`; `loras` says what was applied and what's missing |
 
 Wildcards follow Prompto's rules: `__name__` is one tag from the snippet of that name, or one snippet from that category. Put `seed` or `roll` on **randomize** for a new roll every queue; `roll` starts on **fixed**, so a saved workflow keeps the roll it had. Renaming a recipe, snippet or cast member in Prompto doesn't break saved workflows: the node still finds it under the name it was saved with (the dropdown shows the new name after **R**). If the item was deleted, the node says so when it runs instead of failing validation.
+
+Prompto's sample library ships in `samples.json`. Until Prompto syncs a library, the dropdowns offer the samples, and a workflow that names a sample (like the example workflows) still runs after you've removed the samples from Prompto. Model profiles sync from Prompto 0.24; with an older Prompto the Profile node offers the four starting profiles.
 </details>
 
 <details>

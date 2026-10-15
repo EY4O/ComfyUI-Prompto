@@ -20,7 +20,7 @@ MAX_CAPTURES = 100
 MAX_LIBRARY_BYTES = 25 * 1024 * 1024
 MAX_CAPTURE_BYTES = 4 * 1024 * 1024
 CAPTURE_KINDS = {"generation", "text"}
-LIBRARY_LISTS = ("recipes", "snippets", "cast")
+LIBRARY_LISTS = ("recipes", "snippets", "cast", "profiles")
 
 
 def read_version(path):

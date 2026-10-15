@@ -98,3 +98,64 @@ def test_a_label_in_use_belongs_to_the_live_item():
 def test_deleted_items_are_not_found_through_aliases():
     aliases = {"Rin": "c1"}
     assert L.find([{"id": "c2", "name": "Vale"}], "Rin", L.cast_label, aliases) is None
+
+
+ANIMA = {"id": "anima", "label": "Anima", "format": "hybrid", "prefix": ["masterpiece", "best quality", "score_7", "safe"],
+         "negative": "worst quality, score_1", "artistAt": True,
+         "settings": {"sampler": "er_sde", "scheduler": "simple", "steps": 30, "cfg": 4, "width": 896, "height": 1152}}
+ILLUS = {"id": "illustrious", "label": "Illustrious", "format": "tags", "prefix": ["masterpiece"], "negative": "lowres",
+         "artistAt": False, "settings": {"sampler": "euler_ancestral", "scheduler": "normal", "steps": 28, "cfg": 5}}
+KREA = {"id": "krea", "label": "Flux Krea", "format": "prose", "prefix": [], "negative": None, "settings": {"cfg": 1}}
+
+
+def test_artist_style_keeps_or_drops_the_at():
+    text = "@big chungus, @_@, smile, (@foo:1.2)\n@bar, mail@home"
+    assert L.artist_style(text, True) == text
+    assert L.artist_style(text, False) == "big chungus, @_@, smile, (foo:1.2)\nbar, mail@home"
+
+
+def test_profile_text_adds_the_quality_tags_once():
+    assert L.profile_text(ANIMA, "1girl, @artist") == "masterpiece, best quality, score_7, safe, 1girl, @artist"
+    assert L.profile_text(ANIMA, "Masterpiece, 1girl") == "best quality, score_7, safe, Masterpiece, 1girl"
+    assert L.profile_text(ILLUS, "1girl, @artist") == "masterpiece, 1girl, artist"
+    assert L.profile_text(KREA, "A girl on a bench.") == "A girl on a bench."
+    assert L.profile_text(ANIMA, "") == "masterpiece, best quality, score_7, safe"
+
+
+def test_profile_values():
+    v = L.profile_values(ANIMA, "{red|red} hair", [], 3)
+    assert v["positive"].endswith("red hair") and v["negative"] == "worst quality, score_1"
+    assert (v["sampler"], v["scheduler"], v["steps"], v["cfg"], v["width"], v["height"]) == ("er_sde", "simple", 30, 4.0, 896, 1152)
+    k = L.profile_values(KREA, "x")
+    assert k["negative"] == "" and k["cfg"] == 1.0 and k["steps"] == 28
+
+
+def test_recipe_values_for_another_profile():
+    r = {"profileId": "illustrious", "positive": "masterpiece, 1girl", "negative": "lowres",
+         "renders": {"anima": {"positive": "masterpiece, best quality, score_7, safe, 1girl", "negative": "worst quality"}},
+         "settings": {"seed": 5, "sampler": "euler_ancestral", "steps": 28, "cfg": 5, "width": 832, "height": 1216}}
+    own = L.recipe_values(r, 1, [])
+    assert own["positive"] == "masterpiece, 1girl" and own["sampler"] == "euler_ancestral"
+    assert L.recipe_values(r, 1, [], ILLUS)["positive"] == "masterpiece, 1girl", "its own profile changes nothing"
+    a = L.recipe_values(r, 1, [], ANIMA)
+    assert a["positive"].startswith("masterpiece, best quality, score_7") and a["negative"] == "worst quality"
+    assert (a["sampler"], a["steps"], a["cfg"], a["width"], a["seed"]) == ("er_sde", 30, 4.0, 896, 5)
+    # A snapshot from before renders existed: the profile's wrapping is added to the recipe's prompt.
+    old = {k: v for k, v in r.items() if k != "renders"}
+    assert L.recipe_values(old, 1, [], ANIMA)["positive"] == "best quality, score_7, safe, masterpiece, 1girl"
+
+
+def test_loras_for_and_match_lora():
+    r = {"settings": {"loras": [{"name": "chars/rin_aozora_v2.safetensors", "w": 0.8}, {"name": "detail.safetensors"}]}}
+    c = {"lora": {"name": "Rin_Aozora_V2.safetensors", "w": 0.6}}
+    assert L.loras_for(r, c) == [("chars/rin_aozora_v2.safetensors", 0.8), ("detail.safetensors", 1.0)]
+    assert L.loras_for(None, c) == [("Rin_Aozora_V2.safetensors", 0.6)]
+    installed = [r"Illustrious\characters\rin_aozora_v2.safetensors", "other.safetensors"]
+    assert L.match_lora("rin_aozora_v2", installed) == installed[0]
+    assert L.match_lora("missing.safetensors", installed) is None
+
+
+def test_profile_renames_are_remembered():
+    old = {"profiles": [{"id": "anima", "label": "Anima"}]}
+    new = {"profiles": [{"id": "anima", "label": "Anima v1"}]}
+    assert L.update_aliases(old, new)["profiles"] == {"Anima": "anima"}
