@@ -217,12 +217,14 @@
       "widgets_values": [
         "Lighting · Golden hour",
         "tags",
-        1
+        1,
+        "fixed"
       ],
       "widgets_values_named": {
         "snippet": "Lighting · Golden hour",
         "format": "tags",
-        "roll": 1
+        "roll": 1,
+        "control_after_generate": "fixed"
       },
       "color": "#2b5a5e",
       "bgcolor": "#1f3f42"

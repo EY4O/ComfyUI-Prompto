@@ -49,7 +49,7 @@ class PromptoRecipe(_PromptoNode):
         lib = library()
         return {"required": {
             "recipe": (L.labels(lib.get("recipes"), L.recipe_label),),
-            "roll": ("INT", {"default": 1, "min": 0, "max": 0xFFFFFFFF, "tooltip": "Seed for {a|b} and __snippet__ wildcards in the recipe"}),
+            "roll": ("INT", {"default": 1, "min": 0, "max": 0xFFFFFFFF, "control_after_generate": "fixed", "tooltip": "Seed for {a|b} and __snippet__ wildcards in the recipe"}),
         }}
 
     RETURN_TYPES = ("STRING", "STRING", "INT", "INT", "FLOAT", "INT", "INT", SAMPLERS, SCHEDULERS)
@@ -99,7 +99,7 @@ class PromptoSnippet(_PromptoNode):
         return {"required": {
             "snippet": (L.labels(lib.get("snippets"), L.snippet_label),),
             "format": (["tags", "prose"],),
-            "roll": ("INT", {"default": 1, "min": 0, "max": 0xFFFFFFFF}),
+            "roll": ("INT", {"default": 1, "min": 0, "max": 0xFFFFFFFF, "control_after_generate": "fixed", "tooltip": "Seed for {a|b} and __snippet__ wildcards in the snippet"}),
         }}
 
     RETURN_TYPES = ("STRING",)

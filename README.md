@@ -107,7 +107,7 @@ Find them under **Prompto** in the node menu. They read the library Prompto last
 | **Prompto Snippet** | `text`: a snippet's tags or prose |
 | **Prompto Wildcards** | `text`: any text with `{a\|b}` choices and `__snippet__` names rolled by `seed` |
 
-Wildcards follow Prompto's rules: `__name__` is one tag from the snippet of that name, or one snippet from that category. Put `seed` or `roll` on **randomize** for a new roll every queue. Renaming a recipe, snippet or cast member in Prompto doesn't break saved workflows: the node still finds it under the name it was saved with (the dropdown shows the new name after **R**). If the item was deleted, the node says so when it runs instead of failing validation.
+Wildcards follow Prompto's rules: `__name__` is one tag from the snippet of that name, or one snippet from that category. Put `seed` or `roll` on **randomize** for a new roll every queue; `roll` starts on **fixed**, so a saved workflow keeps the roll it had. Renaming a recipe, snippet or cast member in Prompto doesn't break saved workflows: the node still finds it under the name it was saved with (the dropdown shows the new name after **R**). If the item was deleted, the node says so when it runs instead of failing validation.
 </details>
 
 <details>
