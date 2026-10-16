@@ -39,6 +39,18 @@ def test_captures_queue_and_ack(store):
     assert store.status()["captures"] == 1
 
 
+def test_recipe_captures(store):
+    rec = {"schema": "recipe/1", "title": "Rainy alley", "prompt": {"positive": "rain, neon", "negative": ""},
+           "loras": [{"name": "neon", "weight": 0.8, "hash": "ab" * 32}]}
+    cid = store.add_capture({"kind": "recipe", "source": "Model Librarian", "recipe": rec, "thumb": "data:image/webp;base64,xx"})
+    got = store.list_captures()[-1]
+    assert got["id"] == cid and got["recipe"]["loras"][0]["hash"] == "ab" * 32
+    assert "recipe" in store.status()["capture_kinds"]
+    for bad in ({"kind": "recipe"}, {"kind": "recipe", "recipe": {"schema": "other", "prompt": {}}}, {"kind": "recipe", "recipe": {"schema": "recipe/1"}}):
+        with pytest.raises(ValueError):
+            store.add_capture(bad)
+
+
 def test_captures_validate(store):
     for bad in ({"kind": "video"}, {"kind": "text", "text": "  "}, {"kind": "generation"}, "text"):
         with pytest.raises(ValueError):

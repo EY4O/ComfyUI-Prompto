@@ -19,7 +19,8 @@ except ImportError:  # imported bare, as the tests do
 MAX_CAPTURES = 100
 MAX_LIBRARY_BYTES = 25 * 1024 * 1024
 MAX_CAPTURE_BYTES = 4 * 1024 * 1024
-CAPTURE_KINDS = {"generation", "text"}
+# "recipe": a shared recipe/1 (e.g. from Model Librarian's Recipes tab)
+CAPTURE_KINDS = {"generation", "text", "recipe"}
 LIBRARY_LISTS = ("recipes", "snippets", "cast", "profiles")
 
 
@@ -86,6 +87,10 @@ class Store:
             raise ValueError("text capture is empty")
         if capture["kind"] == "generation" and not (capture.get("graph") or capture.get("thumb")):
             raise ValueError("generation capture needs a graph or an image")
+        if capture["kind"] == "recipe":
+            rec = capture.get("recipe")
+            if not isinstance(rec, dict) or rec.get("schema") != "recipe/1" or not isinstance(rec.get("prompt"), dict):
+                raise ValueError("recipe capture needs a recipe/1 object")
         item = dict(capture)
         item["id"] = "cmf_" + uuid.uuid4().hex[:12]
         item["createdAt"] = int(time.time() * 1000)
@@ -108,5 +113,6 @@ class Store:
         library = self.get_library()
         return {
             "captures": len(self.list_captures()),
+            "capture_kinds": sorted(CAPTURE_KINDS),
             "librarySyncedAt": library.get("syncedAt") if library else None,
         }

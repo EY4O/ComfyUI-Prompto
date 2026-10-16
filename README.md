@@ -27,6 +27,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
 - 📥 **Auto-capture** — an optional setting sends every image from a Save Image node to the inbox, with the prompt that made it.
 - 🕒 **Waits for you** — captures queue on the ComfyUI server (up to 100) until Prompto collects them, so nothing is lost while Chrome is closed.
+- 🧬 **Recipes from Model Librarian** — with [Model Librarian](https://github.com/EY4O/comfyui-model-librarian) installed, **Send to Prompto** on any of its recipes puts it in the inbox, with the models' hashes and Civitai version ids.
 - 🔌 **A stable bridge** — Prompto talks to ComfyUI through this extension instead of ComfyUI's internals, so ComfyUI updates are less likely to break it.
 
 ## 🎬 From booru tag to image
