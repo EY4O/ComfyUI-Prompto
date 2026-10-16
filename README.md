@@ -27,7 +27,7 @@ The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizin
 - 🖱️ **Save to Prompto** — right-click any text node or image node to send its prompt or picture to the Prompto inbox.
 - 📥 **Auto-capture** — an optional setting sends every image from a Save Image node to the inbox, with the prompt that made it.
 - 🕒 **Waits for you** — captures queue on the ComfyUI server (up to 100) until Prompto collects them, so nothing is lost while Chrome is closed.
-- 🧬 **Recipes from Model Librarian** — with [Model Librarian](https://github.com/EY4O/comfyui-model-librarian) installed, **Send to Prompto** on any of its recipes puts it in the inbox, with the models' hashes and Civitai version ids.
+- 🧬 **Recipes from Model Librarian** — with [Model Librarian](https://github.com/EY4O/ComfyUI-Model-Librarian) installed, **Send to Prompto** on any of its recipes puts it in the inbox, with the models' hashes and Civitai version ids.
 - 🔌 **A stable bridge** — Prompto talks to ComfyUI through this extension instead of ComfyUI's internals, so ComfyUI updates are less likely to break it.
 
 ## 🎬 From booru tag to image
@@ -142,7 +142,7 @@ Prompto calls these through the open ComfyUI tab. Without this extension it fall
 - Size goes to the first node with both **width** and **height**.
 - LoRAs fill the existing LoRA loader nodes in order, matched by file name, with the weight on both model and CLIP. Loaders the recipe doesn't use, or whose LoRA isn't installed, are bypassed. No nodes are added; you're told when more loaders are needed.
 - Models are matched by file name, with or without folder and extension (Civitai names models without them).
-- **Missing models**: when the recipe's model or LoRAs aren't installed and [Model Librarian](https://github.com/EY4O/comfyui-model-librarian) is, a notice offers **Get them with Model Librarian**. The recipe is handed over in the shared [`recipe/1` format](https://github.com/EY4O/comfyui-model-librarian/blob/main/docs/RECIPE_FORMAT.md) with the hashes and Civitai version ids Prompto captured, so Model Librarian downloads exactly those files into the right folders, then can fill the workflow (adding loaders when it needs more).
+- **Missing models**: when the recipe's model or LoRAs aren't installed and [Model Librarian](https://github.com/EY4O/ComfyUI-Model-Librarian) is, a notice offers **Get them with Model Librarian**. The recipe is handed over in the shared [`recipe/1` format](https://github.com/EY4O/ComfyUI-Model-Librarian/blob/main/docs/RECIPE_FORMAT.md) with the hashes and Civitai version ids Prompto captured, so Model Librarian downloads exactly those files into the right folders, then can fill the workflow (adding loaders when it needs more).
 </details>
 
 <details>
