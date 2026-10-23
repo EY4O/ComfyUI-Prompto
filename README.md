@@ -10,6 +10,9 @@
   <a href="https://ko-fi.com/looneth"><img src="https://img.shields.io/badge/Ko--fi-Support-FF813F?logo=ko-fi&logoColor=white" alt="Support on Ko-fi"></a>
 </p>
 
+> **Retired.** ComfyUI-Prompto is no longer developed and this repository is archived (read-only). Recipes from images, CivitAI pages and your own runs now live in [Model Librarian](https://github.com/EY4O/ComfyUI-Model-Librarian). An installed copy keeps working as it is; workflows using Prompto nodes need it installed to run.
+
+
 The ComfyUI half of **Prompto**, a Chrome extension for collecting and organizing Stable Diffusion prompts, image recipes and character tags. Prompto keeps your library in the browser so you can capture ideas even when ComfyUI isn't running. This extension brings that library into ComfyUI: a **Prompto** tab in the sidebar loads recipes straight into your workflow, and anything you make in ComfyUI can go back to Prompto's inbox. Open it from the **Prompto** icon in ComfyUI's sidebar.
 
 <p align="center"><img src="docs/images/sidebar.png" width="360" alt="The Prompto sidebar in ComfyUI"><br><sub>The Prompto sidebar in ComfyUI. Screenshot uses sample data.</sub></p>
